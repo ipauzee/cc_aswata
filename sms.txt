@@ -1,0 +1,28 @@
+-- check sms yg sebelumnya sedang dibaca
+select * from log_sms
+where _direction=0
+  and _status=1
+  and username='bram'
+-- bila ada, tampilkan, close frame -> update _status=2, broadcast SMS|UPDATE
+
+-- rebutan baca sms baru
+update log_sms set
+  _status=1
+ ,username='bram'
+where _direction=0
+  and _status=0
+order by sms_date, sms_time
+limit 1
+
+-- cek hasil rebutan sms
+select * from log_sms
+where _direction=0
+  and _status=1
+  and username='bram'
+-- bila ada, broadcast SMS|UPDATE, tampilkan data
+-- CLOSE FRAME
+-- ubah status sms sudah dibaca
+update log_sms set
+  _status=2
+where sms_id=2
+-- broadcast SMS|UPDATE     
