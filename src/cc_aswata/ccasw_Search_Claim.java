@@ -40,7 +40,7 @@ public class ccasw_Search_Claim extends javax.swing.JFrame {
         tabcus.setRowCount(0);
         tbcus(tblcus,new int []{40,200,150,150,120,150,100,120});
         setLocation(0,330);
-//        new Timer(1000, wsinbound).start();
+        new Timer(1000, wsinbound).start();
         wsws=new Timer(1000, wsinbound);
         branch();cob();
     }
