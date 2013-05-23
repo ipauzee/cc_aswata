@@ -107,7 +107,7 @@ public class ccasw_Search_Policy extends javax.swing.JFrame {
                 cus[6]=rs.getString("bsn_name");
                 tabcus.addRow(cus);
             }
-//            sql1="delete from ws_search_customer where request_id="+wsid+" ";
+            sql1="delete from ws_search_policy where request_id="+wsid+" ";
             CCanj.jconn.SQLExecute(sql1, CCanj.conn);
         }catch(Exception exc){
             System.err.println(exc.getMessage());

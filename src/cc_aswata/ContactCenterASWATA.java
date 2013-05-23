@@ -103,7 +103,7 @@ public class ContactCenterASWATA extends javax.swing.JInternalFrame {
    public static StringBuffer toSend = new StringBuffer("");
 
     /** Creates new form ContactCenterASWATA */
-    public static String in[]=new String[20];
+    public static String in[]=new String[30];
     public static String ou[]=new String[17];
     public static String in2[]=new String[15];
     public static String in3[]=new String[15];
@@ -178,7 +178,8 @@ public class ContactCenterASWATA extends javax.swing.JInternalFrame {
         tbldailyout.setModel(tabdayou);
         tblperformin.setModel(tabperfin);
         tblperformout.setModel(tabperfou);
-        tbin(tblin,new int []{130,100,70,85,85,85,60,70,75,120,120,70,90,90,90,550,35,175,150});
+        tbin(tblin,new int []{130,100,70,85,85      ,100,85,160,85,160
+                                ,85,160,85,160      ,100,120        ,150,90,90,90,120      ,550,100,150,200});
         tbin(tblout,new int []{130,110,100,100,110,130,110,110});
         tbin(tblmin,new int []{100,100,100,100,100
                 ,100,100,100,100,100
@@ -378,9 +379,11 @@ public class ContactCenterASWATA extends javax.swing.JInternalFrame {
         return new javax.swing.table.DefaultTableModel(
                 new Object [][]{},
                 new String [] {"Time","User","Shift","Line number","Call status"
-                        ,"Duration","Inquiry","Complaint","Blank Call","Caller number"
+                        ,"Duration","Inquiry","Detail","Complaint","Detail"
+                        ,"Request","Detail","Feedback","Detail"
+                        ,"Blank Call","Caller number"
                         ,"Caller Name","Ticket No.","Status","Log ID","Call Type"
-                        ,"Comment","Wrong Number","Cust Company","Inbound Type"/*,"Callback date","Callback time"*/}){
+                        ,"Comment","Wrong Number","Cust Company","Produk"/*,"Callback date","Callback time"*/}){
                 boolean[] canEdit=new boolean[]{
                     false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false//,false
                 };
@@ -406,6 +409,8 @@ public class ContactCenterASWATA extends javax.swing.JInternalFrame {
                       "shift.data as dshift, " +
                       "if(_inquiry=1,'YES','NO') as inq, " +
                       "if(_complaint=1,'YES','NO') as comp, " +
+                      "if(_request=1,'YES','NO') as req, " +
+                      "if(_feedback=1,'YES','NO') as feed, " +
                       "if(_blankcall=1,'YES','NO') as blank, " +
                       "if(_wrongnumber=1,'YES','NO') as wrong, " +
                       "tickets.ticket_no as notic " +
@@ -436,7 +441,15 @@ public class ContactCenterASWATA extends javax.swing.JInternalFrame {
 
                 in[x]=rs.getString("duration");x++;
                 in[x]=rs.getString("inq");x++;
+                in[x]=rs.getString("inquiry_detail");x++;
                 in[x]=rs.getString("comp");x++;
+                in[x]=rs.getString("complaint_detail");x++;
+                
+                in[x]=rs.getString("req");x++;
+                in[x]=rs.getString("request_detail");x++;
+                in[x]=rs.getString("feed");x++;
+                in[x]=rs.getString("feedback_detail");x++;
+                
                 in[x]=rs.getString("blank");x++;
                 in[x]=rs.getString("caller_number");x++;
 
@@ -5682,11 +5695,11 @@ public static javax.swing.table.DefaultTableModel getDefaultTabelrepcal(){
             new Object [][]{},
             new String [] {"log_id","log_date","log_time","username","shift"
                     ,"host_addr","line_number","_direction","_callstatus","duration"
-                    ,"abandon","wait","Speed of answer","ACW","_inquiry"
-                    ,"_complaint","_blankcall","_wrongnumber","caller_number","caller_type"
-                    ,"caller_name","comment","filename"/*,"_callback","callback_time"*/,"_connected","_contacted"
-                    ,"not_connect_reason","not_contact_reason","phone_number","ticket_id","cust company"
-                    ,"Inbound Type"}){
+                    ,"abandon","wait","Speed of answer","ACW","Inquiry"
+                    ,"Detail","Complaint","Detail","Request","Detail"
+                    ,"Feedback","Detail","Blankcall","Wrongnumber","Caller Number"
+                    ,"Caller Name","Caller Type","Detail Caller Type","Produk","comment"
+                    ,"filename","phone_number","ticket_id"}){
             boolean[] canEdit=new boolean[]{
                 false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
             };
@@ -5705,17 +5718,23 @@ public static javax.swing.table.DefaultTableModel getDefaultTabelrepcal(){
         cal2= sdf.format(dt2);
         try{
             int row=0;            
-            sql="select log_phone.*, " +
-                    "_callstatus.data as cllstatus, " +
-                    "shift.data as dshift, " +
-                    "_direction.data as ddir, " +
-                    "tickets.ticket_no as notic " +
-                    "from log_phone " +
-                    "left join _callstatus on log_phone._callstatus=_callstatus.code " +
-                    "left join tickets on log_phone.ticket_id=tickets.ticket_id " +
-                    "join shift on log_phone.shift=shift.code " +
-                    "join _direction on log_phone._direction=_direction.code " +
-                    "where log_date between '"+cal1+"' and '"+cal2+"' ";
+            sql="select log_phone.*"
+                    + ", _callstatus.data as cllstatus"
+                    + ", shift.data as dshift"
+                    + ", _direction.data as ddir"
+                    + ", if(_inquiry=1,'YES','NO') as inq"
+                    + ", if(_complaint=1,'YES','NO') as comp"
+                    + ", if(_request=1,'YES','NO') as req"
+                    + ", if(_feedback=1,'YES','NO') as feed"
+                    + ", if(_blankcall=1,'YES','NO') as blank"
+                    + ", if(_wrongnumber=1,'YES','NO') as wrong"
+                    + ", tickets.ticket_no as notic "
+                    + " from log_phone"
+                    + " left join _callstatus on log_phone._callstatus=_callstatus.code"
+                    + " left join tickets on log_phone.ticket_id=tickets.ticket_id"
+                    + " join shift on log_phone.shift=shift.code"
+                    + " join _direction on log_phone._direction=_direction.code"
+                    + " where log_date between '"+cal1+"' and '"+cal2+"' ";
             condition="";
             if(!cbagenirepcal.getSelectedItem().equals("--")){
                 condition=condition+" and username like '%"+cbagenirepcal.getSelectedItem()+"%'";
@@ -5739,46 +5758,45 @@ public static javax.swing.table.DefaultTableModel getDefaultTabelrepcal(){
 //            System.out.println(sql);
 
             while(rs.next()){
-//                repcal[0]=rs.getString(1);
-                repcal[1]=rs.getString(2);
-                repcal[2]=rs.getString(3);
-                repcal[3]=rs.getString(4);
-                repcal[4]=rs.getString("dshift");
-                repcal[5]=rs.getString(6);
-                repcal[6]=rs.getString(7);
-                repcal[7]=rs.getString("ddir");
-                repcal[8]=rs.getString("cllstatus");
-                repcal[9]=rs.getString(10);
-                repcal[10]=rs.getString(11);
-                repcal[11]=rs.getString(12);
-                repcal[12]=rs.getString(13);
-                repcal[13]=rs.getString(14);
-                repcal[14]=rs.getString(15);
-                repcal[15]=rs.getString(16);
-                repcal[16]=rs.getString(17);
-                repcal[17]=rs.getString(18);
-                repcal[18]=rs.getString(19);
-                repcal[19]=rs.getString(20);
-                repcal[20]=rs.getString(21);
-                repcal[21]=rs.getString(22);
-                repcal[22]=rs.getString(23);
-//                repcal[23]=rs.getString(24);
-//                System.out.print("\nisi kolom 24"+repcal[23]);
-//                repcal[24]=rs.getString(25);
-//                System.out.print("\nisi kolom 25"+repcal[24]);
-                repcal[23]=rs.getString(26);
-                repcal[24]=rs.getString(27);
-                repcal[25]=rs.getString(28);
-                repcal[26]=rs.getString(29);
-                repcal[27]=rs.getString(30);
-                repcal[28]=rs.getString("notic");
-//                repcal[25]=rs.getString(26);
-//                repcal[26]=rs.getString(27);
-//                repcal[27]=rs.getString(28);
-//                repcal[28]=rs.getString(29);
-                repcal[29]=rs.getString("cust_name");
-                repcal[30]=rs.getString("inbound_type");
+                repcal[x] = rs.getString("log_date"); x += 1;
+                repcal[x] = rs.getString("log_time"); x += 1;
+                repcal[x] = rs.getString("username"); x += 1;
+                repcal[x] = rs.getString("dshift"); x += 1;
+
+                repcal[x] = rs.getString("host_addr"); x += 1;
+                repcal[x] = rs.getString("line_number"); x += 1;
+                repcal[x] = rs.getString("ddir"); x += 1;
+                repcal[x] = rs.getString("cllstatus"); x += 1;
+                repcal[x] = rs.getString("duration"); x += 1;
+
+                repcal[x] = rs.getString("abandon"); x += 1;
+                repcal[x] = rs.getString("delay"); x += 1;
+                repcal[x] = rs.getString("busy"); x += 1;
+                repcal[x] = rs.getString("inq"); x += 1;
+
+                repcal[x] = rs.getString("inquiry_detail"); x += 1;
+                repcal[x] = rs.getString("comp"); x += 1;
+                repcal[x] = rs.getString("complaint_detail"); x += 1;
+                repcal[x] = rs.getString("req"); x += 1;
+                repcal[x] = rs.getString("request_detail"); x += 1;
+
+                repcal[x] = rs.getString("feed"); x += 1;
+                repcal[x] = rs.getString("feedback_detail"); x += 1;
+                repcal[x] = rs.getString("blank"); x += 1;
+                repcal[x] = rs.getString("wrong"); x += 1;
+                repcal[x] = rs.getString("caller_number"); x += 1;
+                repcal[x] = rs.getString("caller_name"); x += 1;
+
+                repcal[x] = rs.getString("caller_type"); x += 1;
+                repcal[x] = rs.getString("category_detail"); x += 1;
+                repcal[x] = rs.getString("inbound_type"); x += 1;
+                repcal[x] = rs.getString("comment"); x += 1;
+                repcal[x] = rs.getString("filename"); x += 1;
+
+                repcal[x] = rs.getString("phone_number"); x += 1;
+                repcal[x] = rs.getString("notic"); x += 1;
                 tabrepcal.addRow(repcal);
+                x = 0;
                 row+=1;
             }if(row==0){
 //                JOptionPane.showMessageDialog(null,"Ticket with number ccasw_ticket "+txtuser.getText()+", categoty "+txtcategory.getText()+", with customer "+txtcustomer.getText()+", with driver "+txtdriver.getText()+" doesn't exsist");

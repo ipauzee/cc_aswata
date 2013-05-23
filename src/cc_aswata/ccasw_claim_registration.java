@@ -34,21 +34,30 @@ import javax.swing.JOptionPane;
  */
 public class ccasw_claim_registration extends javax.swing.JFrame {
     private static String condition,branchid,typofid,docid,causeid,statusid,claimInfoCol;
+    private static String cobid,regType="G",hoLost,toLost,RegNo;
     private static int casco=0,tpl=0,lifeIns=0,paDri=0,paPass=0,pll=0,biayaDerek=0;
-    private static String cus[]=new String[21];
+    public static String ClaimPolicy[]=new String[21];
     public static String cobid1 = "";
     public static int Form=0,wsid=1,wsid1=1,wsstt=0;
-    public static boolean ws=false,ws1=false,action=false,action1=false;
+    public static boolean ws=false,ws1=false,ws2=false,action=false,action1=false;
     Timer wsws;
+    public static SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+    int loop=0;
+
 
     /** Creates new form ccasw_claim_registration */
     public ccasw_claim_registration() {
         initComponents();        
-        tblPolicy.setModel(tabcus1);
-        tabcus1.setRowCount(0);
-        tbcus(tblPolicy,new int []{40,200,150,150,120,150,100,120});
+        tblClaimPolicy.setModel(tabClaimPolicy);
+        tabClaimPolicy.setRowCount(0);
+        tbcus(tblClaimPolicy,new int []{40,200,150,150,120,150,100,120});
         setMaximumSize(new java.awt.Dimension(1024,768));
         branch();statusClaim();couseOf();typeOf();tpl();
+        
+        JFormattedTextField tf = ((JSpinner.DefaultEditor)timeSpinner.getEditor()).getTextField(); tf.setEditable(false);
+        JFormattedTextField tf1 = ((JSpinner.DefaultEditor)timeSpinner1.getEditor()).getTextField(); tf1.setEditable(false);
+        getRegDate();
+        wsws=new Timer(1000,wsinbound);
     }
 
     public static ContactCenterASWATA CCanj;
@@ -94,7 +103,76 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
                 }
         };
     }
-    public static javax.swing.table.DefaultTableModel tabcus1=getDefaultTabelcus1();
+    public static javax.swing.table.DefaultTableModel tabClaimPolicy=getDefaultTabelcus1();
+    
+    public static void detilClaimPolicy()  {
+        try {
+            sql = "select * from ws_policy_claim_info_collection where request_id=" + wsid + " ";
+            rs2 = CCanj.jconn.SQLExecuteRS(sql, CCanj.conn);
+            
+            while (rs2.next()) {
+                ClaimPolicy[0] = rs2.getString("no");
+                ClaimPolicy[1] = rs2.getString("the_insured");        
+                ClaimPolicy[2] = rs2.getString("cob");
+                ClaimPolicy[3] = rs2.getString("policy_number");
+                ClaimPolicy[4] = rs2.getString("cover_note_number");
+                ClaimPolicy[5] = rs2.getString("open_cover_number");
+                ClaimPolicy[6] = rs2.getString("certificate_number");
+                ClaimPolicy[7] = rs2.getString("policy_order_number");
+                ClaimPolicy[8] = rs2.getString("incoming_request_number");
+                tabClaimPolicy.addRow(ClaimPolicy);
+            }
+            sql1 = "delete from ws_policy_claim_info_collection where request_id=" + wsid + " ";
+            CCanj.jconn.SQLExecute(sql1, CCanj.conn);
+        } catch (Exception exc) {
+            System.err.println(exc.getMessage());
+        }
+    }
+    
+    public static void detilcus1() {
+        try {
+            sql2 = "select * from ws_detail_claim_registration a join _ws_branch b on a.branch_id_reg=b.branch_id left join _ws_type_of_loss c on a.selected_typeof_loss=c.code where request_id=" + wsid + " ";
+            rs1 = CCanj.jconn.SQLExecuteRS(sql2, CCanj.conn);
+            System.out.println(sql2);
+            
+            while(rs1.next()){
+                txtRegNo.setText(rs1.getString("registration_no"));
+                cbBranch.setSelectedItem(rs1.getString("name"));
+                cbStatus.setSelectedIndex(Integer.parseInt(rs1.getString("status_claim")));
+                txtRcvd.setText(rs1.getString("received_by"));
+                txtReportedBy.setText(rs1.getString("reported_by"));
+                txtPhoneNo.setText(rs1.getString("phone_no"));
+                txtRefNo.setText(rs1.getString("pla_ref_no"));
+                Date dtdt = sdf.parse(rs1.getString("date_of_loss"));
+                dtLoss.setDate(dtdt);
+                timeSpinner.setValue(Integer.valueOf(Integer.parseInt(rs1.getString("time_of_loss").substring(0, 2))));
+                timeSpinner1.setValue(Integer.valueOf(Integer.parseInt(rs1.getString("time_of_loss").substring(3))));
+                lblRegDate.setText(rs1.getString("registered_date") + " " + rs1.getString("registered_time"));
+                txtDesc.setText(rs1.getString("loss_description"));
+                cbCause.setSelectedItem(rs1.getString("cause_of_loss_desc"));
+                cbType.setSelectedItem(rs1.getString("c.data"));
+                txtChronology.setText(rs1.getString("chronology"));
+                txtLossLocation.setText(rs1.getString("loss_location"));
+                txtRemark.setText(rs1.getString("remark"));
+                txtComment.setText(rs1.getString("comment"));
+                if ((rs1.getString("casco_flag") != null) && (rs1.getString("casco_flag").equals("1"))) ckCasco.setSelected(true);
+                if ((rs1.getString("tpl_flag") != null) && (rs1.getString("tpl_flag").equals("1"))) { ckTpl.setSelected(true); cbTpl.setEnabled(true); cbTpl.setSelectedItem(rs1.getString("tpl_type")); }
+                if ((rs1.getString("life_flag") != null) && (rs1.getString("life_flag").equals("1"))) ckLifeIns.setSelected(true);
+                if ((rs1.getString("pa_driver_flag") != null) && (rs1.getString("pa_driver_flag").equals("1"))) ckPaDriver.setSelected(true);
+                if ((rs1.getString("crane_flag") != null) && (rs1.getString("crane_flag").equals("1"))) ckBiayaDerek.setSelected(true);
+                if ((rs1.getString("cob_id") != null) && ((rs1.getString("cob_id").equals("301")) || (rs1.getString("cob_id").equals("302")) || (rs1.getString("cob_id").equals("303")))) {
+                    ckCasco.setEnabled(true); ckTpl.setSelected(true);
+                    ckLifeIns.setEnabled(true); ckPaDriver.setEnabled(true);
+                    ckPaPassenger.setEnabled(true); ckBiayaDerek.setEnabled(true);
+                }
+                if ((rs1.getString("pa_passenger_flag") == null) || (!rs1.getString("pa_passanger_flag").equals("1"))) ckPaPassenger.setSelected(true);;
+            }
+            sql = "delete from ws_detail_claim_registration where request_id=" + wsid + " ";
+            CCanj.jconn.SQLExecute(sql, CCanj.conn);
+        } catch (Exception exc) {
+            System.err.println(exc.getMessage());
+        }
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -120,7 +198,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblPolicy = new javax.swing.JTable();
+        tblClaimPolicy = new javax.swing.JTable();
         btnSrchPolicy = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
@@ -132,7 +210,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
+        lblRegDate = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
@@ -177,6 +255,9 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         cbType = new javax.swing.JComboBox();
         jLabel40 = new javax.swing.JLabel();
         txtTimeOf = new javax.swing.JFormattedTextField();
+        timeSpinner1 = new javax.swing.JSpinner();
+        jLabel21 = new javax.swing.JLabel();
+        timeSpinner = new javax.swing.JSpinner();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -275,8 +356,8 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         jPanel3.add(jLabel11);
         jLabel11.setBounds(10, 10, 200, 20);
 
-        tblPolicy.setFont(tblPolicy.getFont().deriveFont((float)11));
-        tblPolicy.setModel(new javax.swing.table.DefaultTableModel(
+        tblClaimPolicy.setFont(tblClaimPolicy.getFont().deriveFont((float)11));
+        tblClaimPolicy.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -287,7 +368,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tblPolicy);
+        jScrollPane1.setViewportView(tblClaimPolicy);
 
         jPanel3.add(jScrollPane1);
         jScrollPane1.setBounds(10, 30, 920, 140);
@@ -303,7 +384,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnSrchPolicy);
-        btnSrchPolicy.setBounds(50, 330, 130, 24);
+        btnSrchPolicy.setBounds(50, 330, 130, 0);
 
         jPanel4.setLayout(null);
 
@@ -350,12 +431,13 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         jLabel20.setFont(jLabel20.getFont().deriveFont((float)11));
         jLabel20.setText(" : ");
         jPanel4.add(jLabel20);
-        jLabel20.setBounds(130, 130, 10, 20);
+        jLabel20.setBounds(350, 130, 10, 20);
 
-        jLabel21.setFont(jLabel21.getFont().deriveFont((float)11));
-        jLabel21.setText("REGISTERED DATE");
-        jPanel4.add(jLabel21);
-        jLabel21.setBounds(150, 160, 240, 20);
+        lblRegDate.setFont(lblRegDate.getFont().deriveFont((float)11));
+        lblRegDate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblRegDate.setText("REGISTERED DATE");
+        jPanel4.add(lblRegDate);
+        lblRegDate.setBounds(150, 160, 240, 20);
 
         jLabel22.setFont(jLabel22.getFont().deriveFont((float)11));
         jLabel22.setText("or DAMAGE OBJECT *");
@@ -593,13 +675,31 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         txtTimeOf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("h:mm"))));
         txtTimeOf.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jPanel4.add(txtTimeOf);
-        txtTimeOf.setBounds(310, 130, 80, 24);
+        txtTimeOf.setBounds(390, 130, 0, 24);
+
+        timeSpinner1.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
+        jPanel4.add(timeSpinner1);
+        timeSpinner1.setBounds(360, 130, 40, 24);
+
+        jLabel21.setFont(jLabel21.getFont().deriveFont((float)11));
+        jLabel21.setText(" : ");
+        jPanel4.add(jLabel21);
+        jLabel21.setBounds(130, 130, 10, 20);
+
+        timeSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 24, 1));
+        jPanel4.add(timeSpinner);
+        timeSpinner.setBounds(310, 130, 40, 24);
 
         jPanel1.add(jPanel4);
         jPanel4.setBounds(30, 360, 940, 860);
 
         jButton1.setFont(jButton1.getFont().deriveFont(jButton1.getFont().getStyle() | java.awt.Font.BOLD, 11));
         jButton1.setText("SAVE");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton1MouseEntered(evt);
+            }
+        });
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -614,9 +714,10 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-ccasw_Search_Policy srpolis = new ccasw_Search_Policy();
+
     private void btnSrchPolicyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSrchPolicyActionPerformed
         // TODO add your handling code here:
+        ccasw_Search_Policy srpolis = new ccasw_Search_Policy();
         srpolis.setVisible(true);
         srpolis.Form = 5;
 //        srpolis.txtNama.setText(txtcalnm.getText());
@@ -626,6 +727,31 @@ ccasw_Search_Policy srpolis = new ccasw_Search_Policy();
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
         PoDe.btnClaim.setEnabled(true);
+        if (ws2 == true){
+            try {
+                sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP "
+                        + ", username='" + ContactCenterASWATA.lbluser.getText() + "'"
+                        + ", function_id=5" 
+                        + ", ws_params='" + PoDe.lblPolicyNo.getText() + ".'" + "";
+                CCanj.jconn.SQLExecute(sql1, CCanj.conn);
+                sqlid = "select distinct last_insert_id() from ws_request";
+                rs = CCanj.jconn.SQLExecuteRS(sqlid, CCanj.conn);
+                while (rs.next()) {
+                    wsid1 = Integer.parseInt(rs.getString(1));
+                    ws1 = true;
+                }
+            System.out.println("\n wsid1 : " + wsid1);
+            if (ws1 == true) {
+                PoDe.ws = ws1;
+                PoDe.ws1 = false;
+                PoDe.wsid = wsid1;
+                PoDe.request();
+            }
+            PoDe.btnClaim.setEnabled(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(ccasw_claim_registration.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }        
     }//GEN-LAST:event_formWindowClosed
 
     private void ckTplActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckTplActionPerformed
@@ -640,7 +766,8 @@ ccasw_Search_Policy srpolis = new ccasw_Search_Policy();
 String dateOfLoss,RegDate,RegTime;
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        ws1=true;
+        getTablePolicy(); getbranch(); getstatus(); getTypeOf(); getCouseOf(); getcob(); getTimeLost();
+        ws1=false;
         Date dt6 =dtLoss.getDate();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         if(dt6!=null){                dateOfLoss = sdf.format(dt6);            }
@@ -649,7 +776,7 @@ String dateOfLoss,RegDate,RegTime;
                     + ",username='" + CCanj.lbluser.getText() + "'"
                     + ",function_id=13"
                     + ",ws_params='\"comment\"-:-\""+txtComment.getText()+"\"-,-" +
-                        "\"cobId\"-:-\"\"-,-" +
+                        "\"cobId\"-:-\""+cobid1+"\"-,-" +
                         "\"tplType\"-:-\""+cbTpl.getSelectedItem()+"\"-,-" +
                         "\"remark\"-:-\""+txtRemark.getText()+"\"-,-" +
                         "\"tplFlag\"-:-\""+tpl+"\"-,-" +
@@ -662,7 +789,7 @@ String dateOfLoss,RegDate,RegTime;
                         "\"userName\"-:-\""+CCanj.lbluser.getText()+"\"-,-" +
                         "\"typeOfLossId\"-:-\""+typofid+"\"-,-" +
                         "\"typeOfLossDesc\"-:-\""+cbType.getSelectedItem()+"\"-,-" +
-                        "\"registrationType\"-:-\"\"-,-" +
+                        "\"registrationType\"-:-\""+regType+"\"-,-" +
                         "\"registrationNo\"-:-\"\"-,-" +
                         "\"branchIdReg\"-:-\""+branchid+"\"-,-" +
                         "\"reportedBy\"-:-\""+txtReportedBy.getText()+"\"-,-" +
@@ -675,11 +802,11 @@ String dateOfLoss,RegDate,RegTime;
                         "\"chronology\"-:-\""+txtChronology.getText()+"\"-,-" +
                         "\"paDriverFlag\"-:-\""+paDri+"\"-,-" +
                         "\"paPassengerFlag\"-:-\""+paPass+"\"-,-" +
-                        "\"claimCenter\"-:-\"\"-,-" +
-                        "\"jabodetabek\"-:-\"\"-,-" +
+                        "\"claimCenter\"-:-\"N\"-,-" +
+                        "\"jabodetabek\"-:-\"N\"-,-" +
                         "\"policyClaimInfoCollection\"-:-["+claimInfoCol+"]-,-" +
                         "\"statusClaim\"-:-\""+cbStatus.getSelectedIndex()+"\"-,-" +
-                        "\"timeOfLoss\"-:-\""+txtTimeOf.getText()+"\"-,-" +
+                        "\"timeOfLoss\"-:-\""+hoLost+":"+toLost+"\"-,-" +
                         "\"registeredTime\"-:-\""+RegTime+"\"-,-" +
                         "\"causeOfLossDesc\"-:-\""+cbCause.getSelectedItem()+"\"-,-" +
                         "\"selectedTypeofLoss\"-:-\""+typofid+"'"
@@ -701,23 +828,23 @@ String dateOfLoss,RegDate,RegTime;
 
     private void getTablePolicy(){
         claimInfoCol="";
-        if(tabcus1.getRowCount()!=0){
-            int loop=0;
-            while(loop != tabcus1.getRowCount()){
+        if(tabClaimPolicy.getRowCount()!=0){
+            loop=0;
+            while(loop != tabClaimPolicy.getRowCount()){
                 loop++;
                 if(claimInfoCol.equals("")){
-                    claimInfoCol=claimInfoCol+"|";
+                    claimInfoCol=claimInfoCol+"-,-";
                 }
-                claimInfoCol=claimInfoCol="{\"cobId\"-:-\"301\"-,-" +
-                            "	\"no\"-:-\""+(String)tblPolicy.getValueAt(loop,tblPolicy.getTableHeader().getColumnModel().getColumnIndex("No."))+"\"-,-" +
-                            "	\"cob\"-:-\""+(String)tblPolicy.getValueAt(loop,tblPolicy.getTableHeader().getColumnModel().getColumnIndex("C.O.B"))+"\"-,-" +
+                claimInfoCol=claimInfoCol="{\"cobId\"-:-\""+cobid+"\"-,-" +
+                            "	\"no\"-:-\""+(String)tblClaimPolicy.getValueAt(loop,tblClaimPolicy.getTableHeader().getColumnModel().getColumnIndex("No."))+"\"-,-" +
+                            "	\"cob\"-:-\""+(String)tblClaimPolicy.getValueAt(loop,tblClaimPolicy.getTableHeader().getColumnModel().getColumnIndex("C.O.B"))+"\"-,-" +
                             "	\"incomingRequestNumber\"-:-\"\"-,-" +
-                            "	\"policyNumber\"-:-\""+(String)tblPolicy.getValueAt(loop,tblPolicy.getTableHeader().getColumnModel().getColumnIndex("POLICY NO."))+"\"-,-" +
+                            "	\"policyNumber\"-:-\""+(String)tblClaimPolicy.getValueAt(loop,tblClaimPolicy.getTableHeader().getColumnModel().getColumnIndex("POLICY NO."))+"\"-,-" +
                             "	\"policyOrderNumber\"-:-\"null\"-,-" +
                             "	\"certificateNumber\"-:-\"null\"-,-" +
                             "	\"coverNoteNumber\"-:-\"null\"-,-" +
                             "	\"openCoverNumber\"-:-\"null\"-,-" +
-                            "	\"theInsured\"-:-\""+(String)tblPolicy.getValueAt(loop,tblPolicy.getTableHeader().getColumnModel().getColumnIndex("THE INSURED"))+"\"}" ;
+                            "	\"theInsured\"-:-\""+(String)tblClaimPolicy.getValueAt(loop,tblClaimPolicy.getTableHeader().getColumnModel().getColumnIndex("THE INSURED"))+"\"}" ;
             }
 //            claimInfoCol="["+claimInfoCol+"]";
         }
@@ -776,6 +903,13 @@ String dateOfLoss,RegDate,RegTime;
         }
     }//GEN-LAST:event_ckBiayaDerekActionPerformed
 
+    private void jButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseEntered
+        // TODO add your handling code here:
+        if ((txtReportedBy.getText() == "") || (dtLoss.getDate() == null) || (txtDesc.getText().equals("")) || (cbCause.getSelectedIndex() == -1) || (txtLossLocation.getText().equals("")) || (txtChronology.getText().equals("")) || (cbBranch.getSelectedIndex() == -1)){            
+            JOptionPane.showMessageDialog(null, "Please Fill All Mandatory Field\n Which has stars mark (*)", "Attention", 1);
+        }
+    }//GEN-LAST:event_jButton1MouseEntered
+
     /**
     * @param args the command line arguments
     */
@@ -789,19 +923,19 @@ String dateOfLoss,RegDate,RegTime;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSrchPolicy;
-    private javax.swing.JComboBox cbBranch;
-    private javax.swing.JComboBox cbCause;
-    private javax.swing.JComboBox cbStatus;
-    private javax.swing.JComboBox cbTpl;
-    private javax.swing.JComboBox cbType;
-    private javax.swing.JCheckBox ckBiayaDerek;
-    private javax.swing.JCheckBox ckCasco;
-    private javax.swing.JCheckBox ckLifeIns;
-    private javax.swing.JCheckBox ckPaDriver;
-    private javax.swing.JCheckBox ckPaPassenger;
-    private javax.swing.JCheckBox ckPll;
-    private javax.swing.JCheckBox ckTpl;
-    private com.toedter.calendar.JDateChooser dtLoss;
+    public static javax.swing.JComboBox cbBranch;
+    public static javax.swing.JComboBox cbCause;
+    public static javax.swing.JComboBox cbStatus;
+    public static javax.swing.JComboBox cbTpl;
+    public static javax.swing.JComboBox cbType;
+    public static javax.swing.JCheckBox ckBiayaDerek;
+    public static javax.swing.JCheckBox ckCasco;
+    public static javax.swing.JCheckBox ckLifeIns;
+    public static javax.swing.JCheckBox ckPaDriver;
+    public static javax.swing.JCheckBox ckPaPassenger;
+    public static javax.swing.JCheckBox ckPll;
+    public static javax.swing.JCheckBox ckTpl;
+    public static com.toedter.calendar.JDateChooser dtLoss;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -849,27 +983,30 @@ String dateOfLoss,RegDate,RegTime;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
+    public static javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTable tblPolicy;
-    private javax.swing.JTextArea txtChronology;
-    private javax.swing.JTextArea txtComment;
-    private javax.swing.JTextArea txtDesc;
-    private javax.swing.JTextArea txtLossLocation;
-    private javax.swing.JTextField txtPhoneNo;
-    private javax.swing.JTextField txtRcvd;
-    private javax.swing.JTextField txtRefNo;
-    private javax.swing.JTextField txtRegNo;
-    private javax.swing.JTextArea txtRemark;
-    private javax.swing.JTextField txtReportedBy;
+    public static javax.swing.JScrollPane jScrollPane5;
+    public static javax.swing.JScrollPane jScrollPane6;
+    public static javax.swing.JScrollPane jScrollPane7;
+    public static javax.swing.JLabel lblRegDate;
+    private javax.swing.JTable tblClaimPolicy;
+    public static javax.swing.JSpinner timeSpinner;
+    public static javax.swing.JSpinner timeSpinner1;
+    public static javax.swing.JTextArea txtChronology;
+    public static javax.swing.JTextArea txtComment;
+    public static javax.swing.JTextArea txtDesc;
+    public static javax.swing.JTextArea txtLossLocation;
+    public static javax.swing.JTextField txtPhoneNo;
+    public static javax.swing.JTextField txtRcvd;
+    public static javax.swing.JTextField txtRefNo;
+    public static javax.swing.JTextField txtRegNo;
+    public static javax.swing.JTextArea txtRemark;
+    public static javax.swing.JTextField txtReportedBy;
     private javax.swing.JFormattedTextField txtTimeOf;
     // End of variables declaration//GEN-END:variables
 
-    private static String sql,sql1,sqlid;
-    private static ResultSet rs,rs1;
+    private static String sql,sql1,sql2,sqlid;
+    private static ResultSet rs,rs1,rs2;
 
     Action wsinbound = new AbstractAction() {
         public void actionPerformed(ActionEvent e) {
@@ -887,12 +1024,28 @@ String dateOfLoss,RegDate,RegTime;
             System.out.println("\n status ws : "+wsstt+" dari ws id : "+wsid);
             process();
             if(wsstt==2){
-                if(ws1==false){  }else{ dispose();}
+                if(ws1==false){  
+                    sql2 = "select return_value from ws_save_claim_registration where request_id=" + wsid + " ";
+                    rs1 = CCanj.jconn.SQLExecuteRS(sql2, CCanj.conn);
+                    while (rs1.next()) {
+                        RegNo = rs1.getString(1);
+                    }
+                    if ((RegNo == null) || (RegNo.equals("failed"))) {
+                        JOptionPane.showMessageDialog(null, "Claim Failed", "Error!!!", 2);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Your Claim Number is \n" + RegNo, "Claim SUCCESS", 2);
+                        dispose();
+                        ws2 = true;
+                    }
+                }else{
+                    detilcus1();
+                    detilClaimPolicy();
+                }
                 wsws.stop();Prg.dialog.hide();
             }else if(wsstt==3){
                 wsws.stop();
                 Prg.dialog.hide();
-                JOptionPane.showMessageDialog(null, "Data not found","Error!!!",JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Requesting Failed","Error Web Services!!!",JOptionPane.WARNING_MESSAGE);
                 dispose();
             }
             ws1=false;
@@ -952,6 +1105,7 @@ String dateOfLoss,RegDate,RegTime;
         }
     }
     private void couseOf(){
+        cbCause.removeAllItems();
         condition = "";
         try {
             sql1 = "select content from _ws_cause_of_loss ";
@@ -1050,10 +1204,37 @@ String dateOfLoss,RegDate,RegTime;
             while(rs.next()){
                 RegDate=(rs.getString(1).toString());
                 RegTime=(rs.getString(2).toString());
+                lblRegDate.setText(this.RegDate + " " + this.RegTime);
+                timeSpinner.setValue(Integer.valueOf(Integer.parseInt(this.RegTime.substring(0, 2))));
+                timeSpinner1.setValue(Integer.valueOf(Integer.parseInt(this.RegTime.substring(3, 5))));
             }
         }catch(Exception e){
             System.out.println(e);
         }
     }
-     
+    private void getcob() { 
+        cobid = "";
+        try {
+            sql = "select bsn_id from _ws_cob where name='" + (String)this.tblClaimPolicy.getValueAt(this.loop, this.tblClaimPolicy.getTableHeader().getColumnModel().getColumnIndex("C.O.B")) + "'";
+            rs = CCanj.jconn.SQLExecuteRS(sql, CCanj.conn);
+            while (rs.next()) {
+                cobid = rs.getString(1).toString();
+                if (cobid.substring(0, 1).equals("3"))
+                    regType = "M";
+            }
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        } 
+    }
+    
+    private void getTimeLost() {
+        hoLost = timeSpinner.getValue().toString();
+        toLost = timeSpinner1.getValue().toString();
+        if (hoLost.length() == 1) {
+            hoLost = "0" + hoLost;
+        }
+        if (toLost.length() == 1)
+            toLost = "0" + toLost;
+    }     
 }
