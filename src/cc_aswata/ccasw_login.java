@@ -72,7 +72,7 @@ public class ccasw_login extends javax.swing.JFrame {
         }
         initComponents();
         
-        version=Pro;setKoneksi();
+        version=Dev;setKoneksi();
         if(version==Loc){
 //            setTitle("CONTACT CENTER KONICA MINOLTA");
 //            lbllogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/konica_minolta_logo_clear.gif")));

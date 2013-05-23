@@ -36,6 +36,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
     private static String condition,branchid,typofid,docid,causeid,statusid,claimInfoCol;
     private static int casco=0,tpl=0,lifeIns=0,paDri=0,paPass=0,pll=0,biayaDerek=0;
     private static String cus[]=new String[21];
+    public static String cobid1 = "";
     public static int Form=0,wsid=1,wsid1=1,wsstt=0;
     public static boolean ws=false,ws1=false,action=false,action1=false;
     Timer wsws;
@@ -902,7 +903,7 @@ String dateOfLoss,RegDate,RegTime;
     private void branch(){
         cbBranch.removeAllItems();
         try{
-            sql="select name from _ws_branch ";
+            sql="select name from _ws_branch where regional_id <> branch_id or branch_id=87 order by branch_id ";
             rs=CCanj.jconn.SQLExecuteRS(sql,CCanj.conn);
             while(rs.next()){
                 cbBranch.addItem(rs.getString(1));
@@ -951,9 +952,13 @@ String dateOfLoss,RegDate,RegTime;
         }
     }
     private void couseOf(){
-        cbCause.removeAllItems();
-        try{
-            sql="select content from _ws_cause_of_loss ";
+        condition = "";
+        try {
+            sql1 = "select content from _ws_cause_of_loss ";
+            if ((cobid1 != null) && (!cobid1.equals(""))){
+                condition = "where bsn_id=" + cobid1 + "";
+            }
+            sql1 += condition;
             rs=CCanj.jconn.SQLExecuteRS(sql,CCanj.conn);
             while(rs.next()){
                 cbCause.addItem(rs.getString(1));
@@ -1016,7 +1021,7 @@ String dateOfLoss,RegDate,RegTime;
     private void getCouseOf(){
         causeid="";
         try{
-            sql="select couseofloss_id from _ws_cause_of_loss where content='"+cbCause.getSelectedItem()+"'";
+            sql="select couseofloss_id from _ws_cause_of_loss where content='"+cbCause.getSelectedItem()+"' and bsn_id=" + cobid1 + "";
             rs=CCanj.jconn.SQLExecuteRS(sql,CCanj.conn);
             while(rs.next()){
                 causeid =(rs.getString(1).toString());
@@ -1050,4 +1055,5 @@ String dateOfLoss,RegDate,RegTime;
             System.out.println(e);
         }
     }
+     
 }
