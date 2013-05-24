@@ -50,7 +50,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         initComponents();        
         tblClaimPolicy.setModel(tabClaimPolicy);
         tabClaimPolicy.setRowCount(0);
-        tbcus(tblClaimPolicy,new int []{40,200,150,150,120,150,100,120});
+        tbcus(this.tblClaimPolicy, new int[] { 40, 200, 150, 250, 250, 250, 200, 120, 150 });
         setMaximumSize(new java.awt.Dimension(1024,768));
         branch();statusClaim();couseOf();typeOf();tpl();
         

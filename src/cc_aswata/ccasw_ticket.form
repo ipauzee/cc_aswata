@@ -1889,6 +1889,11 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel5">
                           <Properties>
+                            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+                              <FontInfo relative="true">
+                                <Font component="jLabel5" property="font" relativeSize="false" size="11"/>
+                              </FontInfo>
+                            </Property>
                             <Property name="text" type="java.lang.String" value="  Claim Reg. No. : "/>
                           </Properties>
                           <Constraints>

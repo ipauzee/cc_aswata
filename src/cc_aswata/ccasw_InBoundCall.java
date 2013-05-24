@@ -213,13 +213,13 @@ public class ccasw_InBoundCall extends javax.swing.JFrame {
             }
         });
         jPanel2.add(ckblank);
-        ckblank.setBounds(10, 15, 100, 20);
+        ckblank.setBounds(10, 20, 100, 20);
 
         ckwrongno.setBackground(new java.awt.Color(255, 255, 255));
         ckwrongno.setFont(ckwrongno.getFont().deriveFont((float)11));
         ckwrongno.setText("WRONG NUMBER");
         jPanel2.add(ckwrongno);
-        ckwrongno.setBounds(180, 15, 130, 20);
+        ckwrongno.setBounds(180, 20, 130, 20);
 
         ckinqui.setBackground(new java.awt.Color(255, 255, 255));
         ckinqui.setFont(ckinqui.getFont().deriveFont((float)11));
@@ -423,24 +423,28 @@ public class ccasw_InBoundCall extends javax.swing.JFrame {
         cbInq.setFont(cbInq.getFont().deriveFont((float)11));
         cbInq.setMaximumRowCount(9);
         cbInq.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Non-customer", "Customer-Driver", "Customer-User", "Customer-PIC", "Customer-Other", "Internal-ANJ", "Internal-CC", "Internal-CSO", "Internal-Driver", "Internal-Other" }));
+        cbInq.setEnabled(false);
         jPanel2.add(cbInq);
         cbInq.setBounds(110, 150, 200, 24);
 
         cbComp.setFont(cbComp.getFont().deriveFont((float)11));
         cbComp.setMaximumRowCount(9);
         cbComp.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Non-customer", "Customer-Driver", "Customer-User", "Customer-PIC", "Customer-Other", "Internal-ANJ", "Internal-CC", "Internal-CSO", "Internal-Driver", "Internal-Other" }));
+        cbComp.setEnabled(false);
         jPanel2.add(cbComp);
         cbComp.setBounds(110, 170, 200, 24);
 
         cbReq.setFont(cbReq.getFont().deriveFont((float)11));
         cbReq.setMaximumRowCount(9);
         cbReq.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Non-customer", "Customer-Driver", "Customer-User", "Customer-PIC", "Customer-Other", "Internal-ANJ", "Internal-CC", "Internal-CSO", "Internal-Driver", "Internal-Other" }));
+        cbReq.setEnabled(false);
         jPanel2.add(cbReq);
         cbReq.setBounds(110, 190, 200, 24);
 
         cbFeed.setFont(cbFeed.getFont().deriveFont((float)11));
         cbFeed.setMaximumRowCount(9);
         cbFeed.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Non-customer", "Customer-Driver", "Customer-User", "Customer-PIC", "Customer-Other", "Internal-ANJ", "Internal-CC", "Internal-CSO", "Internal-Driver", "Internal-Other" }));
+        cbFeed.setEnabled(false);
         jPanel2.add(cbFeed);
         cbFeed.setBounds(110, 210, 200, 24);
 

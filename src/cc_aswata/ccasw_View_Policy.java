@@ -74,7 +74,7 @@ public class ccasw_View_Policy extends javax.swing.JFrame {
 
             while(rs1.next()){
                 html.setText(rs1.getString("html_format"));
-                client_id=(rs1.getString(3));
+                client_id=(rs1.getString("insured_client_id"));
             }
             xhtml = html.getText();
 //            delhtml=xhtml.sub

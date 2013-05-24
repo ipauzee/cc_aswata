@@ -886,6 +886,7 @@ public class ccasw_ticket extends javax.swing.JFrame {
         jPanel4.add(txtClaimNo);
         txtClaimNo.setBounds(110, 30, 310, 25);
 
+        jLabel5.setFont(jLabel5.getFont().deriveFont((float)11));
         jLabel5.setText("  Claim Reg. No. : ");
         jPanel4.add(jLabel5);
         jLabel5.setBounds(10, 30, 100, 20);
