@@ -258,7 +258,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         timeSpinner1 = new javax.swing.JSpinner();
         jLabel21 = new javax.swing.JLabel();
         timeSpinner = new javax.swing.JSpinner();
-        jButton1 = new javax.swing.JButton();
+        btnClaimSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -693,20 +693,20 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         jPanel1.add(jPanel4);
         jPanel4.setBounds(30, 360, 940, 860);
 
-        jButton1.setFont(jButton1.getFont().deriveFont(jButton1.getFont().getStyle() | java.awt.Font.BOLD, 11));
-        jButton1.setText("SAVE");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnClaimSave.setFont(btnClaimSave.getFont().deriveFont(btnClaimSave.getFont().getStyle() | java.awt.Font.BOLD, 11));
+        btnClaimSave.setText("SAVE");
+        btnClaimSave.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton1MouseEntered(evt);
+                btnClaimSaveMouseEntered(evt);
             }
         });
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnClaimSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnClaimSaveActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1);
-        jButton1.setBounds(890, 1220, 80, 24);
+        jPanel1.add(btnClaimSave);
+        btnClaimSave.setBounds(890, 1220, 80, 24);
 
         jScrollPane2.setViewportView(jPanel1);
 
@@ -764,7 +764,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ckTplActionPerformed
 String dateOfLoss,RegDate,RegTime;
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnClaimSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClaimSaveActionPerformed
         // TODO add your handling code here:
         getTablePolicy(); getbranch(); getstatus(); getTypeOf(); getCouseOf(); getcob(); getTimeLost();
         ws1=false;
@@ -824,7 +824,7 @@ String dateOfLoss,RegDate,RegTime;
         }catch (SQLException ex) {
             Logger.getLogger(ccasw_Search_customer.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnClaimSaveActionPerformed
 
     private void getTablePolicy(){
         claimInfoCol="";
@@ -903,12 +903,12 @@ String dateOfLoss,RegDate,RegTime;
         }
     }//GEN-LAST:event_ckBiayaDerekActionPerformed
 
-    private void jButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseEntered
+    private void btnClaimSaveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnClaimSaveMouseEntered
         // TODO add your handling code here:
         if ((txtReportedBy.getText() == "") || (dtLoss.getDate() == null) || (txtDesc.getText().equals("")) || (cbCause.getSelectedIndex() == -1) || (txtLossLocation.getText().equals("")) || (txtChronology.getText().equals("")) || (cbBranch.getSelectedIndex() == -1)){            
             JOptionPane.showMessageDialog(null, "Please Fill All Mandatory Field\n Which has stars mark (*)", "Attention", 1);
         }
-    }//GEN-LAST:event_jButton1MouseEntered
+    }//GEN-LAST:event_btnClaimSaveMouseEntered
 
     /**
     * @param args the command line arguments
@@ -922,6 +922,7 @@ String dateOfLoss,RegDate,RegTime;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public static javax.swing.JButton btnClaimSave;
     private javax.swing.JButton btnSrchPolicy;
     public static javax.swing.JComboBox cbBranch;
     public static javax.swing.JComboBox cbCause;
@@ -936,7 +937,6 @@ String dateOfLoss,RegDate,RegTime;
     public static javax.swing.JCheckBox ckPll;
     public static javax.swing.JCheckBox ckTpl;
     public static com.toedter.calendar.JDateChooser dtLoss;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1104,7 +1104,7 @@ String dateOfLoss,RegDate,RegTime;
             System.out.println(e);
         }
     }
-    private void couseOf(){
+    public static void couseOf(){
         cbCause.removeAllItems();
         condition = "";
         try {

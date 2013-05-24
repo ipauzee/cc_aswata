@@ -27,22 +27,23 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
     private static String cus[]=new String[21];
     private static String cus1[]=new String[21];
     private static String cus2[]=new String[21];
-    public static String client_id;
+    public static String client_id,cobid="",Desc="";
     public static int wsid=1,wsid1=1,wsstt=0,X=0,X1=0,Form=0;
-    public static boolean ws=false,ws1=false,transaction=false;
+    public static boolean ws=false,ws1=false,ws2=false,transaction=false;
     Timer wsws;
 
     /** Creates new form ccasw_Police_Detail */
     public ccasw_Police_Detail() {
         initComponents();
-        tblcus.setModel(tabcus);
+        tblcus.setModel(tabcus2);
         tblcus1.setModel(tabcus1);
         tbcus(tblcus,new int []{40,40,240,60,140,40,40,140,140,110,110});
         tbcus(tblcus1,new int []{40,260,120,120,40,180,220});
-        setSize(1010,630);
+        setSize(1010,650);
         wsws=new Timer(1000, wsinbound);
         if(Form==1){btnOpenTic.setEnabled(false);}
         btnEmbed.setVisible(false);
+        cbQq.setVisible(false);        lblQq.setVisible(false);        lblQq1.setVisible(false);
     }
 
     public static ContactCenterASWATA CCanj;
@@ -73,9 +74,9 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
                 }
         };
     }
-    public static javax.swing.table.DefaultTableModel tabcus=getDefaultTabelcus();
+    public static javax.swing.table.DefaultTableModel tabcus2=getDefaultTabelcus();
     public static void tabelcus(){
-        tabcus.setRowCount(0);
+        tabcus2.setRowCount(0);
         try{
             sql="select * from ws_notes_info_collection where request_id="+wsid+" ";
             rs=CCanj.jconn.SQLExecuteRS(sql, CCanj.conn);
@@ -93,7 +94,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
                 cus[8]=rs.getString(11);
                 cus[9]=rs.getString(12);
                 cus[10]=rs.getString(13);
-                tabcus.addRow(cus);
+                tabcus2.addRow(cus);
             }
             sql1="delete from ws_notes_info_collection where request_id="+wsid+" ";
             CCanj.jconn.SQLExecute(sql1, CCanj.conn);
@@ -142,6 +143,9 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
             }
             sql="delete from ws_claim_history_collection where request_id="+wsid+" ";
             CCanj.jconn.SQLExecute(sql, CCanj.conn);
+            if(tabcus1.getRowCount()==0){
+                btnOpenTic.setEnabled(true);
+            }
         }catch(Exception exc){
             System.err.println(exc.getMessage());
         }
@@ -156,19 +160,39 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
                 txtBranchName.setText(rs1.getString("branch_name"));
                 lblPolicyNo.setText(rs1.getString("policy_number"));
                 lblPI1.setText(rs1.getString("net_premi"));
-                lblPI2.setText(rs1.getString(7));
-                lblPI3.setText(rs1.getString(8));
-                txtReqNm.setText(rs1.getString(9));
-                txtInsured.setText(rs1.getString(10));
-                txtCob.setText(rs1.getString(11));
-                txtPFrom.setText(rs1.getString(12));
-                txtPTo.setText(rs1.getString(13));
+                lblPI2.setText(rs1.getString("total_claim"));
+                lblPI3.setText(rs1.getString("loss_ratio"));
+                txtReqNm.setText(rs1.getString("requestor_name"));
+                txtInsured.setText(rs1.getString("the_insured"));
+                txtCob.setText(rs1.getString("cob_name"));
+                txtPFrom.setText(rs1.getString("policy_period_start"));
+                txtPTo.setText(rs1.getString("policy_period_end"));
+                client_id = rs1.getString("the_insured_id");
             }
             sql="delete from ws_detail_policy_payment where request_id="+wsid+" ";
             CCanj.jconn.SQLExecute(sql, CCanj.conn);
         }catch(Exception exc){
             System.err.println(exc.getMessage());
         }
+    }
+    
+    public static void detilQQ() {
+        try { 
+            sql2 = "select * from ws_qq_name_list  where request_id=" + wsid + " ";
+            rs1 = CCanj.jconn.SQLExecuteRS(sql2, CCanj.conn);
+            System.out.println(sql2);
+
+            while (rs1.next()) {
+                cbQq.addItem(rs1.getString("qq_name"));
+                cbQq.setVisible(true);
+                lblQq.setVisible(true);
+                lblQq1.setVisible(true);
+            }
+            sql = "delete from ws_qq_name_list where request_id=" + wsid + " ";
+            CCanj.jconn.SQLExecute(sql, CCanj.conn);
+            } catch (Exception exc) {
+                System.err.println(exc.getMessage());
+            }
     }
     
     public static void detilcus2(){
@@ -197,6 +221,25 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
             System.err.println(exc.getMessage());
         }
     }
+    
+    public static void detilClaim() {
+        try { 
+            sql2 = "select * from ws_detail_claim_registration a "
+                    + " join _ws_branch b on a.branch_id_reg=b.branch_id "
+                    + " left join _ws_type_of_loss c on a.selected_typeof_loss=c.code "
+                    + " where request_id=" + wsid + " ";        
+            rs1 = CCanj.jconn.SQLExecuteRS(sql2, CCanj.conn);
+            System.out.println(sql2);
+
+            while (rs1.next()) {
+                Desc = "DESCRIPTION OF LOSS or DAMAGE OBJECT :\n" + rs1.getString("loss_description") + "\n\nCHRONOLOGY :\n" + rs1.getString("chronology");
+            }
+            sql = "delete from ws_detail_claim_registration where request_id=" + wsid + " ";
+            CCanj.jconn.SQLExecute(sql, CCanj.conn);
+        } catch (Exception exc) {
+            System.err.println(exc.getMessage());
+        }        
+  }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -241,6 +284,9 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         txtPFrom = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
+        lblQq = new javax.swing.JLabel();
+        lblQq1 = new javax.swing.JLabel();
+        cbQq = new javax.swing.JComboBox();
         jPanel4 = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -255,7 +301,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("POLICY - DETAIL");
-        setFont(new java.awt.Font("Tahoma", 1, 11));
+        setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -283,7 +329,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jPanel2.add(lblPolicyNo);
         lblPolicyNo.setBounds(190, 40, 260, 20);
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel3.setText(" : ");
         jPanel2.add(jLabel3);
         jLabel3.setBounds(180, 40, 10, 20);
@@ -291,9 +337,9 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jLabel4.setFont(jLabel4.getFont().deriveFont((float)11));
         jLabel4.setText("BRANCH NAME");
         jPanel2.add(jLabel4);
-        jLabel4.setBounds(0, 20, 170, 20);
+        jLabel4.setBounds(10, 20, 160, 20);
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel5.setText(" : ");
         jPanel2.add(jLabel5);
         jLabel5.setBounds(180, 20, 10, 20);
@@ -310,9 +356,9 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jLabel6.setFont(jLabel6.getFont().deriveFont((float)11));
         jLabel6.setText("POLICY NUMBER");
         jPanel2.add(jLabel6);
-        jLabel6.setBounds(0, 40, 170, 20);
+        jLabel6.setBounds(10, 40, 160, 20);
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel7.setText(" : ");
         jPanel2.add(jLabel7);
         jLabel7.setBounds(680, 40, 10, 20);
@@ -322,7 +368,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jPanel2.add(jLabel8);
         jLabel8.setBounds(500, 20, 180, 20);
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel9.setText(" : ");
         jPanel2.add(jLabel9);
         jLabel9.setBounds(680, 20, 10, 20);
@@ -337,7 +383,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jPanel2.add(jLabel11);
         jLabel11.setBounds(500, 60, 180, 20);
 
-        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel12.setText(" : ");
         jPanel2.add(jLabel12);
         jLabel12.setBounds(680, 60, 10, 20);
@@ -368,7 +414,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jPanel3.add(jLabel16);
         jLabel16.setBounds(0, 0, 160, 13);
 
-        jLabel18.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel18.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel18.setText(" : ");
         jPanel3.add(jLabel18);
         jLabel18.setBounds(180, 40, 10, 20);
@@ -376,9 +422,9 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jLabel19.setFont(jLabel19.getFont().deriveFont((float)11));
         jLabel19.setText("REQUESTOR NAME");
         jPanel3.add(jLabel19);
-        jLabel19.setBounds(0, 20, 170, 20);
+        jLabel19.setBounds(10, 20, 160, 20);
 
-        jLabel20.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel20.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel20.setText(" : ");
         jPanel3.add(jLabel20);
         jLabel20.setBounds(180, 20, 10, 20);
@@ -390,9 +436,9 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jLabel21.setFont(jLabel21.getFont().deriveFont((float)11));
         jLabel21.setText("THE INSURED");
         jPanel3.add(jLabel21);
-        jLabel21.setBounds(0, 40, 170, 20);
+        jLabel21.setBounds(10, 40, 160, 20);
 
-        jLabel22.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel22.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel22.setText(" : ");
         jPanel3.add(jLabel22);
         jLabel22.setBounds(680, 40, 10, 20);
@@ -402,7 +448,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jPanel3.add(jLabel23);
         jLabel23.setBounds(500, 20, 180, 20);
 
-        jLabel24.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel24.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel24.setText(" : ");
         jPanel3.add(jLabel24);
         jLabel24.setBounds(680, 20, 10, 20);
@@ -436,13 +482,27 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jPanel3.add(jLabel26);
         jLabel26.setBounds(810, 40, 20, 20);
 
-        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel27.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel27.setText(" : ");
         jPanel3.add(jLabel27);
         jLabel27.setBounds(830, 40, 10, 20);
 
+        lblQq.setFont(lblQq.getFont().deriveFont((float)11));
+        lblQq.setText("QQ NAME");
+        jPanel3.add(lblQq);
+        lblQq.setBounds(10, 60, 160, 20);
+
+        lblQq1.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        lblQq1.setText(" : ");
+        jPanel3.add(lblQq1);
+        lblQq1.setBounds(180, 60, 10, 20);
+
+        cbQq.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel3.add(cbQq);
+        cbQq.setBounds(190, 60, 260, 24);
+
         jPanel1.add(jPanel3);
-        jPanel3.setBounds(10, 100, 980, 80);
+        jPanel3.setBounds(10, 100, 980, 90);
 
         jPanel4.setLayout(null);
 
@@ -466,7 +526,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jScrollPane2.setBounds(0, 20, 980, 180);
 
         jPanel1.add(jPanel4);
-        jPanel4.setBounds(10, 190, 980, 200);
+        jPanel4.setBounds(10, 200, 980, 200);
 
         jPanel5.setLayout(null);
 
@@ -484,13 +544,18 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
                 "NO.", "REG. NO.", "REG. DATE", "DATE OF LOSS", "CUR", "LOSS EST./ CLAIM PAID", "STATUS"
             }
         ));
+        tblcus1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblcus1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblcus1);
 
         jPanel5.add(jScrollPane1);
         jScrollPane1.setBounds(0, 20, 980, 140);
 
         jPanel1.add(jPanel5);
-        jPanel5.setBounds(10, 400, 980, 160);
+        jPanel5.setBounds(10, 410, 980, 160);
 
         btnClaim.setFont(btnClaim.getFont().deriveFont(btnClaim.getFont().getStyle() | java.awt.Font.BOLD, 11));
         btnClaim.setText("CLAIM");
@@ -500,7 +565,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnClaim);
-        btnClaim.setBounds(10, 560, 80, 24);
+        btnClaim.setBounds(10, 570, 80, 24);
 
         btnOpenTic.setFont(btnOpenTic.getFont().deriveFont(btnOpenTic.getFont().getStyle() | java.awt.Font.BOLD, 11));
         btnOpenTic.setText("Open Ticket");
@@ -510,7 +575,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnOpenTic);
-        btnOpenTic.setBounds(890, 560, 100, 24);
+        btnOpenTic.setBounds(890, 570, 100, 24);
 
         btnEmbed.setFont(btnEmbed.getFont().deriveFont(btnEmbed.getFont().getStyle() | java.awt.Font.BOLD, 11));
         btnEmbed.setText("Embed");
@@ -520,10 +585,10 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnEmbed);
-        btnEmbed.setBounds(790, 560, 100, 24);
+        btnEmbed.setBounds(790, 570, 100, 24);
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(0, 0, 1000, 600);
+        jPanel1.setBounds(0, 0, 1000, 610);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -565,7 +630,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
-        wsws.stop();tabcus.setRowCount(0);tabcus1.setRowCount(0);
+        wsws.stop();tabcus2.setRowCount(0);tabcus1.setRowCount(0);
     }//GEN-LAST:event_formWindowClosed
 
     private void txtBranchNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBranchNameActionPerformed
@@ -593,6 +658,9 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
             ccasw_ticket tic=new ccasw_ticket();
             tic.setVisible(true);
             tic.txtNoPolis.setText(lblPolicyNo.getText());
+            if (this.tblcus1.getRowCount() != 0) {
+                ccasw_ticket.txtClaimNo.setText((String)this.tblcus1.getValueAt(this.tblcus1.getSelectedRow(), this.tblcus1.getTableHeader().getColumnModel().getColumnIndex("REG. NO.")));
+            }
             request();
             tic.txtcusnam.setText(cus2[0]);
             tic.txtcustadd.setText(cus2[1]);
@@ -600,6 +668,27 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
             tic.txtCellPho.setText(cus2[3]);
             tic.txtWorkPho.setText(cus2[4]);
             tic.txtcusfax.setText(cus2[5]);
+            
+            sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP "
+                    + ", username='" + CCanj.lbluser.getText() + "'"
+                    + ",function_id=10"
+                    + ",ws_params='" + (String)this.tblcus1.getValueAt(this.tblcus1.getSelectedRow(), this.tblcus1.getTableHeader().getColumnModel().getColumnIndex("REG. NO.")) + ".'"
+                    + "";
+            
+            CCanj.jconn.SQLExecute(sql1, CCanj.conn);
+            sqlid = "select distinct last_insert_id() from ws_request";
+            rs = CCanj.jconn.SQLExecuteRS(sqlid, CCanj.conn);
+            while (rs.next()) {
+                wsid1 = Integer.parseInt(rs.getString(1));
+                ws = true;
+                ws2 = true;
+                ws1 = true;
+            }
+            System.out.println("\n wsid1 req chronology : " + wsid1);
+            wsid = wsid1;
+            request();
+            Tic.txtdetails.setText(Desc);
+            Tic.claimReg = true;
         }catch (SQLException ex) {
             Logger.getLogger(ccasw_Search_customer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -636,7 +725,56 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         btnClaim.setEnabled(false);
         ccasw_claim_registration srclaim = new ccasw_claim_registration();
         srclaim.setVisible(true);
+        srclaim.ClaimPolicy[0] = "1";
+        srclaim.ClaimPolicy[1] = txtInsured.getText();
+        srclaim.ClaimPolicy[2] = txtCob.getText();
+        srclaim.ClaimPolicy[3] = lblPolicyNo.getText();
+        srclaim.tabClaimPolicy.addRow(srclaim.ClaimPolicy);
+        srclaim.cobid1 = cobid; srclaim.couseOf();
+        srclaim.txtRcvd.setText(CCanj.lbluser.getText());
+        if ((cobid.equals("301")) || (cobid.equals("302")) || (cobid.equals("303"))) {
+          srclaim.cbType.setEnabled(true);
+          srclaim.ckCasco.setEnabled(true);
+          srclaim.ckTpl.setEnabled(true);
+          srclaim.ckLifeIns.setEnabled(true);
+          srclaim.ckPaDriver.setEnabled(true);
+          srclaim.ckPaPassenger.setEnabled(true);
+          srclaim.ckPll.setEnabled(true);
+          srclaim.ckBiayaDerek.setEnabled(true);
+        }
     }//GEN-LAST:event_btnClaimActionPerformed
+
+    private void tblcus1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblcus1MouseClicked
+        // TODO add your handling code here:
+        if ((evt.getClickCount() == 2) && (tabcus1.getRowCount() != 0)){
+            try {
+                sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP ,username='" + ContactCenterASWATA.lbluser.getText() + "'" + ",function_id=10" + ",ws_params='" + (String)this.tblcus1.getValueAt(this.tblcus1.getSelectedRow(), this.tblcus1.getTableHeader().getColumnModel().getColumnIndex("REG. NO.")) + ".'" + "";
+                ContactCenterASWATA.jconn.SQLExecute(sql1, ContactCenterASWATA.conn);
+                
+                sqlid = "select distinct last_insert_id() from ws_request";
+                rs = ContactCenterASWATA.jconn.SQLExecuteRS(sqlid, ContactCenterASWATA.conn);
+                while (rs.next()) {
+                    wsid1 = Integer.parseInt(rs.getString(1));
+                    ws1 = true;
+                }
+                System.out.println("\n wsid1 scr : " + wsid1);
+                ccasw_claim_registration CLREG = new ccasw_claim_registration();                
+                CLREG.setVisible(true);
+                CLREG.wsid = wsid1;
+                CLREG.Form = Form;
+                CLREG.btnClaimSave.setEnabled(false);
+                if (ws1 == true) {
+                    CLREG.ws1 = true;
+                    CLREG.wsid = wsid1;
+                    CLREG.request();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ccasw_Police_Detail.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else if ((evt.getClickCount() == 1) && (tabcus1.getRowCount() != 0) && (Form != 1)){
+            btnOpenTic.setEnabled(true);
+        }        
+    }//GEN-LAST:event_tblcus1MouseClicked
 
     /**
     * @param args the command line arguments
@@ -653,6 +791,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
     public static javax.swing.JButton btnClaim;
     public static javax.swing.JButton btnEmbed;
     public static javax.swing.JButton btnOpenTic;
+    public static javax.swing.JComboBox cbQq;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -688,6 +827,8 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
     public static javax.swing.JLabel lblPI2;
     public static javax.swing.JLabel lblPI3;
     public static javax.swing.JLabel lblPolicyNo;
+    public static javax.swing.JLabel lblQq;
+    public static javax.swing.JLabel lblQq1;
     private javax.swing.JTable tblcus;
     private javax.swing.JTable tblcus1;
     public static javax.swing.JTextField txtBranchName;
@@ -718,12 +859,15 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
             process();
             if(wsstt==2){
                 if(ws1==false){
-                    detilcus();System.out.println(" load detil : "+wsid);
+                    detilcus();detilQQ();System.out.println(" load detil : "+wsid);
                     tabelcus();System.out.println(" load notes : "+wsid);
                     tabelcus1();System.out.println(" load claim history : "+wsid);
+                }else if(ws2==true){
+                    ws2=false;
+                    detilClaim();
                 }else{
-                     detilcus2();
-                     dispose();
+                    detilcus2();
+//                    dispose();
                 }
                 wsws.stop();
                 Prg.dialog.hide();
@@ -761,6 +905,18 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         if(Form==1){
             btnEmbed.setVisible(true);
             btnOpenTic.setEnabled(false);
+        }
+    }
+    private void getcob() { 
+        cobid = "";
+        try {
+            sql = "select bsn_id from _ws_cob where name='" + txtCob.getText() + "'";
+            rs = CCanj.jconn.SQLExecuteRS(sql, CCanj.conn);
+            while (rs.next())
+                cobid = rs.getString(1).toString();
+        }
+        catch (Exception e) {
+            System.out.println(e);
         }
     }
 }

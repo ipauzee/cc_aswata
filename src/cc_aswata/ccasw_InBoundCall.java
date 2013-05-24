@@ -901,10 +901,11 @@ boolean mute=false;
             JOptionPane.showMessageDialog(null, "Please input the Product, Caller Type and Detil");
         }
     }//GEN-LAST:event_btnsaveActionPerformed
-ccasw_Search_customer srcus = new ccasw_Search_customer();
+
     private void btnsrchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsrchActionPerformed
 //        try {
-        if(wscus==false){
+//        if(wscus==false){
+            ccasw_Search_customer srcus = new ccasw_Search_customer();
             srcus.setVisible(true);
             srcus.Form = 2;
 //            srcus.txtPhoneNo.setText(txtcalnum.getText());
@@ -925,9 +926,9 @@ ccasw_Search_customer srcus = new ccasw_Search_customer();
 //        } catch (SQLException ex) {
 //            Logger.getLogger(ccasw_InBoundCall.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-        }else{
-            JOptionPane.showMessageDialog(null, "Close the last form before");
-        }
+//        }else{
+//            JOptionPane.showMessageDialog(null, "Close the last form before");
+//        }
 }//GEN-LAST:event_btnsrchActionPerformed
 
     private void tblcallMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblcallMouseClicked

@@ -49,7 +49,7 @@ public class ccasw_ticket extends javax.swing.JFrame {
     public static int no1;
     public static int ticno;
     public static int submit;
-    public static boolean newtic=true;
+    public static boolean newtic=true,claimReg=false;
     public static boolean caltic=false;
     public static String strnospNow="";
     public static int ass = -1;
@@ -89,8 +89,8 @@ public class ccasw_ticket extends javax.swing.JFrame {
         opdt();
 //        generateNoTrans();
         id=-1;
-        catdetailupadate=false;
-        catfinalupadate=false;
+        catdetailupadate=false;newtic=true;
+        catfinalupadate=false;claimReg=false;
 //        submit=0;
 //        klik2();
     }
@@ -753,7 +753,7 @@ public class ccasw_ticket extends javax.swing.JFrame {
         jPanel4.add(jLabel22);
         jLabel22.setBounds(10, 10, 100, 20);
 
-        btnsrch3.setFont(new java.awt.Font("Calibri", 0, 12));
+        btnsrch3.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         btnsrch3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/1245117595_001_37.png"))); // NOI18N
         btnsrch3.setToolTipText("Search Policy");
         btnsrch3.addActionListener(new java.awt.event.ActionListener() {
@@ -764,7 +764,7 @@ public class ccasw_ticket extends javax.swing.JFrame {
         jPanel4.add(btnsrch3);
         btnsrch3.setBounds(490, 10, 24, 24);
 
-        btnsrch1.setFont(new java.awt.Font("Calibri", 0, 12));
+        btnsrch1.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         btnsrch1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/1245117595_001_37.png"))); // NOI18N
         btnsrch1.setToolTipText("Search Claim Registration");
         btnsrch1.addActionListener(new java.awt.event.ActionListener() {
@@ -775,7 +775,7 @@ public class ccasw_ticket extends javax.swing.JFrame {
         jPanel4.add(btnsrch1);
         btnsrch1.setBounds(490, 30, 24, 24);
 
-        btnsrchcus.setFont(new java.awt.Font("Calibri", 0, 11));
+        btnsrchcus.setFont(new java.awt.Font("Calibri", 0, 11)); // NOI18N
         btnsrchcus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/1245117595_001_37.png"))); // NOI18N
         btnsrchcus.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -878,6 +878,11 @@ public class ccasw_ticket extends javax.swing.JFrame {
         txtWorkPho.setBounds(110, 90, 150, 24);
 
         txtClaimNo.setFont(txtClaimNo.getFont().deriveFont((float)11));
+        txtClaimNo.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtClaimNoCaretUpdate(evt);
+            }
+        });
         jPanel4.add(txtClaimNo);
         txtClaimNo.setBounds(110, 30, 310, 25);
 
@@ -1502,6 +1507,8 @@ public class ccasw_ticket extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "TICKET "+no1+" SUBMITED", "TICKETING",JOptionPane.WARNING_MESSAGE);
                         CCanj.s = "TICKET|ASSIGN|"+deptid+"|"+no1+"\r\n";
                         CCanj.kirimBroad();
+                        sql1 = "insert into notify (ticket_id,username,_read) (select " + id + ",username,0 from user_account where dept_id in (" + deptid + "))";
+                        CCanj.jconn.SQLExecute(sql1, CCanj.conn);
 //                        if (cbDept.getSelectedItem().equals("DEPT. MARKETING")){
 //                            sql1="insert into log_mail (mail_from,mail_to,mail_subject,mail_text,ticket_id,direction,username,direction_type) values ('contact@mpm-rent.com','"+txtTowMail.getText()+"','<Ticket>#"+txtcusnam.getText()+"#"+cbCategory.getSelectedItem()+"#"+no1+"','Details :\n"+txtdetails.getText()+"\n\nSoluiton :\n"+txtlastnote.getText()+" \n\n Action Status : "+rnarasi+"\n\n SUBMITED','"+id+"',1,'"+CCanj.lbluser.getText()+"','Internal-CSO')";
 //                            CCanj.jconn.SQLExecute(sql1,CCanj.conn);
@@ -1588,6 +1595,9 @@ public class ccasw_ticket extends javax.swing.JFrame {
                     }
                     if(submit==1){
                         JOptionPane.showMessageDialog(null, "TICKET "+txtnotic.getText()+" SUBMITED", "TICKETING",JOptionPane.WARNING_MESSAGE);
+                        
+                        sql1 = "insert into notify (ticket_id,username,_read) (select " + id + ",username,0 from user_account where dept_id in (" + deptid + "))";
+                        ContactCenterASWATA.jconn.SQLExecute(sql1, ContactCenterASWATA.conn);
 //                        if (cbDept.getSelectedItem().equals("DEPT. MARKETING")){
 //                            sql1="insert into log_mail (mail_from,mail_to,mail_subject,mail_text,ticket_id,direction,username,direction_type) values ('contact@mpm-rent.com','"+txtTowMail.getText()+"','<Ticket>#"+txtcusnam.getText()+"#"+cbCategory.getSelectedItem()+"#"+txtnotic.getText()+"','Submitted by : "+CCanj.lbluser.getText()+"\n"+opdt+"\n"+optm+"\n\n"+txtdetails.getText()+"\n\n"+txtlastnote.getText()+"\n\n Action Status : "+rnarasi+"','"+id+"',1,'"+CCanj.lbluser.getText()+"','Internal-CSO')";
 //                            System.out.print("\n isi sql insert mail "+sql1 );
@@ -1688,7 +1698,9 @@ public class ccasw_ticket extends javax.swing.JFrame {
     public boolean catfinalupadate=false;
     private void btnsrchcusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsrchcusActionPerformed
         // TODO add your handling code here:
-
+        ccasw_Search_customer srcus = new ccasw_Search_customer();
+        srcus.setVisible(true);
+        srcus.Form = 1;
     }//GEN-LAST:event_btnsrchcusActionPerformed
 
     private void cbCatDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCatDetailActionPerformed
@@ -1724,18 +1736,20 @@ public class ccasw_ticket extends javax.swing.JFrame {
     private void btnhistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnhistActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnhistActionPerformed
-ccasw_Search_Policy srpolis = new ccasw_Search_Policy();
+
     private void btnsrch3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsrch3ActionPerformed
         // TODO add your handling code here:
+        ccasw_Search_Policy srpolis = new ccasw_Search_Policy();
         srpolis.setVisible(true);
         srpolis.Form = 1;
         srpolis.txtDocNo.setText(txtNoPolis.getText());
         srpolis.btnsrch.setEnabled(true);
     }//GEN-LAST:event_btnsrch3ActionPerformed
-ccasw_Search_Claim srclaim = new ccasw_Search_Claim();
+
     private void btnsrch1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsrch1ActionPerformed
         // TODO add your handling code here:
         //        try {
+        ccasw_Search_Claim srclaim = new ccasw_Search_Claim();
         srclaim.setVisible(true);
         srclaim.Form = 1;
         srclaim.txtNama.setText(txtClaimNo.getText());
@@ -1791,7 +1805,33 @@ ccasw_Search_Claim srclaim = new ccasw_Search_Claim();
 
     private void btnViewClaimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewClaimActionPerformed
         // TODO add your handling code here:
-
+        int wsid1 = -1; boolean ws1 = false;
+        try {
+            sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP ,username='" + ContactCenterASWATA.lbluser.getText() + "'" + ",function_id=10" + ",ws_params='" + txtClaimNo.getText() + ".'" + "";
+            
+            ContactCenterASWATA.jconn.SQLExecute(sql1, ContactCenterASWATA.conn);
+            sqlid = "select distinct last_insert_id() from ws_request";
+            rs = ContactCenterASWATA.jconn.SQLExecuteRS(sqlid, ContactCenterASWATA.conn);
+            while (rs.next()) {
+                wsid1 = Integer.parseInt(rs.getString(1));
+                ws1 = true;
+                
+            }
+            System.out.println("\n wsid1 : " + wsid1);
+            
+            ccasw_claim_registration CLREG = new ccasw_claim_registration();
+            CLREG.setVisible(true);
+            CLREG.wsid = wsid1;
+            CLREG.Form = 1;
+            CLREG.btnClaimSave.setEnabled(false);
+            if (ws1 ==true)  {
+                CLREG.ws1 = true;
+                CLREG.wsid = wsid1;
+                CLREG.request();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ccasw_Search_customer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnViewClaimActionPerformed
 
     private void txtNoPolisCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtNoPolisCaretUpdate
@@ -1802,6 +1842,14 @@ ccasw_Search_Claim srclaim = new ccasw_Search_Claim();
             btnViewPolis.setEnabled(true);
         }
     }//GEN-LAST:event_txtNoPolisCaretUpdate
+
+    private void txtClaimNoCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtClaimNoCaretUpdate
+        // TODO add your handling code here:
+        if (txtClaimNo.getText().length() < 20)
+            btnViewClaim.setEnabled(false);
+        else
+            btnViewClaim.setEnabled(true);
+    }//GEN-LAST:event_txtClaimNoCaretUpdate
 
 
      private boolean inputValid(){
