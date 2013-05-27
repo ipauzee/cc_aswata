@@ -40,7 +40,7 @@ public class ccasw_Search_Claim extends javax.swing.JFrame {
         tabcus.setRowCount(0);
         tbcus(tblcus,new int []{40,200,150,150,120,150,100,120});
         setLocation(0,330);
-        new Timer(1000, wsinbound).start();
+//        new Timer(1000, wsinbound).start();
         wsws=new Timer(1000, wsinbound);
         branch();cob();
     }
@@ -411,8 +411,8 @@ private static String Lstart=null,Lend=null,Rstart=null,Rend=null;
 //                        case 2:
                             sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP "
                                     + ",username='" + CCanj.lbluser.getText() + "'"
-                                    + ",function_id=5"
-                                    + ",ws_params='"+(String)tblcus.getValueAt(tblcus.getSelectedRow(),tblcus.getTableHeader().getColumnModel().getColumnIndex("Client ID"))+"'"
+                                    + ",function_id=10"
+                                    + ",ws_params='"+(String)tblcus.getValueAt(tblcus.getSelectedRow(),tblcus.getTableHeader().getColumnModel().getColumnIndex("Registration No"))+"'."
                                     + "";
                             CCanj.jconn.SQLExecute(sql1, CCanj.conn);
                             sqlid = "select distinct last_insert_id() from ws_request";
@@ -425,13 +425,15 @@ private static String Lstart=null,Lend=null,Rstart=null,Rend=null;
 //                            if(ws=true){
 //                                wsws.start();
 //                            }
-                            ccasw_Police_Detail PODE=new ccasw_Police_Detail();
-                            PODE.setVisible(true);
-                            PODE.wsid=wsid1;
-                            PODE.Form=Form;
+                            ccasw_claim_registration CLREG = new ccasw_claim_registration();
+                            CLREG.setVisible(true);
+                            CLREG.wsid=wsid1;
+                            CLREG.Form=Form;
+                            CLREG.btnClaimSave.setEnabled(false);
                             if(ws1=true){
-                                PODE.ws=ws1;
-                                PODE.wsid=wsid1;
+                                CLREG.ws1=ws1;
+                                CLREG.wsid=wsid1;
+                                CLREG.request();
                             }
 //                            break;
 //                        case 3:
@@ -463,7 +465,7 @@ private static String Lstart=null,Lend=null,Rstart=null,Rend=null;
                     + ",username='" + CCanj.lbluser.getText() + "'"
                     + ",function_id=9"
                     + ",ws_params='" + branchid + "|" + cobid + "|" + txtNama.getText() + "|" + txtReportBy.getText() + "|" + txtSttClaim.getText() + ""
-                    + "|" + Rstart + "|" + Rend + "|" + Lstart + "|" + Lend + "|" + txtRegNo.getText() + "|" + txtPolicyNo.getText() + "'"
+                    + "|" + Rstart + "|" + Rend + "|" + Lstart + "|" + Lend + "|" + txtRegNo.getText() + "|" + txtPolicyNo.getText() + "'."
                     + "";
             CCanj.jconn.SQLExecute(sql1, CCanj.conn);
             sqlid = "select distinct last_insert_id() from ws_request";

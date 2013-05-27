@@ -165,7 +165,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
                     ckLifeIns.setEnabled(true); ckPaDriver.setEnabled(true);
                     ckPaPassenger.setEnabled(true); ckBiayaDerek.setEnabled(true);
                 }
-                if ((rs1.getString("pa_passenger_flag") == null) || (!rs1.getString("pa_passanger_flag").equals("1"))) ckPaPassenger.setSelected(true);;
+                if ((rs1.getString("pa_passenger_flag") != null) || (rs1.getString("pa_passanger_flag").equals("1"))) ckPaPassenger.setSelected(true);
             }
             sql = "delete from ws_detail_claim_registration where request_id=" + wsid + " ";
             CCanj.jconn.SQLExecute(sql, CCanj.conn);
@@ -271,8 +271,8 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         jScrollPane2.setPreferredSize(new java.awt.Dimension(1024, 768));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setMaximumSize(new java.awt.Dimension(1004, 966));
-        jPanel1.setPreferredSize(new java.awt.Dimension(1004, 1266));
+        jPanel1.setMaximumSize(new java.awt.Dimension(1004, 1306));
+        jPanel1.setPreferredSize(new java.awt.Dimension(1004, 1306));
         jPanel1.setLayout(null);
 
         jLabel1.setFont(jLabel1.getFont().deriveFont(jLabel1.getFont().getStyle() | java.awt.Font.BOLD, 14));
@@ -334,6 +334,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         cbStatus.setFont(cbStatus.getFont().deriveFont((float)11));
         cbStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbStatus.setEnabled(false);
         jPanel2.add(cbStatus);
         cbStatus.setBounds(590, 40, 340, 25);
 
@@ -431,7 +432,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         jLabel20.setFont(jLabel20.getFont().deriveFont((float)11));
         jLabel20.setText(" : ");
         jPanel4.add(jLabel20);
-        jLabel20.setBounds(350, 130, 10, 20);
+        jLabel20.setBounds(360, 130, 10, 20);
 
         lblRegDate.setFont(lblRegDate.getFont().deriveFont((float)11));
         lblRegDate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -611,7 +612,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
         jPanel4.add(txtReportedBy);
         txtReportedBy.setBounds(150, 40, 300, 24);
 
-        dtLoss.setDateFormatString("DD-MMM-yyyy HH:mm");
+        dtLoss.setDateFormatString("dd-MM-yyyy");
         dtLoss.setFont(dtLoss.getFont().deriveFont((float)11));
         jPanel4.add(dtLoss);
         dtLoss.setBounds(150, 130, 140, 24);
@@ -679,7 +680,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         timeSpinner1.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
         jPanel4.add(timeSpinner1);
-        timeSpinner1.setBounds(360, 130, 40, 24);
+        timeSpinner1.setBounds(370, 130, 50, 24);
 
         jLabel21.setFont(jLabel21.getFont().deriveFont((float)11));
         jLabel21.setText(" : ");
@@ -688,7 +689,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         timeSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 24, 1));
         jPanel4.add(timeSpinner);
-        timeSpinner.setBounds(310, 130, 40, 24);
+        timeSpinner.setBounds(310, 130, 50, 24);
 
         jPanel1.add(jPanel4);
         jPanel4.setBounds(30, 360, 940, 860);
@@ -1113,7 +1114,7 @@ String dateOfLoss,RegDate,RegTime;
                 condition = "where bsn_id=" + cobid1 + "";
             }
             sql1 += condition;
-            rs=CCanj.jconn.SQLExecuteRS(sql,CCanj.conn);
+            rs=CCanj.jconn.SQLExecuteRS(sql1,CCanj.conn);
             while(rs.next()){
                 cbCause.addItem(rs.getString(1));
             }
