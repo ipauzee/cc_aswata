@@ -30,7 +30,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
     public static String client_id,cobid="",Desc="";
     public static int wsid=1,wsid1=1,wsstt=0,X=0,X1=0,Form=0;
     public static boolean ws=false,ws1=false,ws2=false,transaction=false;
-    Timer wsws;
+    public static Timer wsws;
 
     /** Creates new form ccasw_Police_Detail */
     public ccasw_Police_Detail() {
@@ -51,7 +51,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         this();
         this.CCanj=ccanj;
     }
-    private ccasw_ProgressBar Prg;
+    public static ccasw_ProgressBar Prg;
     public ccasw_Police_Detail(ccasw_ProgressBar prg){
         this();
         this.Prg=prg;
@@ -177,6 +177,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
     }
     
     public static void detilQQ() {
+        cbQq.removeAllItems();
         try { 
             sql2 = "select * from ws_qq_name_list  where request_id=" + wsid + " ";
             rs1 = CCanj.jconn.SQLExecuteRS(sql2, CCanj.conn);
@@ -345,6 +346,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jLabel5.setBounds(180, 20, 10, 20);
 
         txtBranchName.setFont(txtBranchName.getFont().deriveFont((float)11));
+        txtBranchName.setEnabled(false);
         txtBranchName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtBranchNameActionPerformed(evt);
@@ -430,6 +432,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jLabel20.setBounds(180, 20, 10, 20);
 
         txtInsured.setFont(txtInsured.getFont().deriveFont((float)11));
+        txtInsured.setEnabled(false);
         jPanel3.add(txtInsured);
         txtInsured.setBounds(190, 40, 260, 24);
 
@@ -459,20 +462,24 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         jLabel25.setBounds(500, 40, 180, 20);
 
         txtReqNm.setFont(txtReqNm.getFont().deriveFont((float)11));
+        txtReqNm.setEnabled(false);
         jPanel3.add(txtReqNm);
         txtReqNm.setBounds(190, 20, 260, 24);
 
         txtCob.setFont(txtCob.getFont().deriveFont((float)11));
+        txtCob.setEnabled(false);
         jPanel3.add(txtCob);
         txtCob.setBounds(690, 20, 270, 24);
 
         txtPTo.setFont(txtPTo.getFont().deriveFont((float)11));
         txtPTo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtPTo.setEnabled(false);
         jPanel3.add(txtPTo);
         txtPTo.setBounds(850, 40, 110, 24);
 
         txtPFrom.setFont(txtPFrom.getFont().deriveFont((float)11));
         txtPFrom.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtPFrom.setEnabled(false);
         jPanel3.add(txtPFrom);
         txtPFrom.setBounds(690, 40, 110, 24);
 
@@ -689,6 +696,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
             request();
             Tic.txtdetails.setText(Desc);
             Tic.claimReg = true;
+            Tic.newtic= false;
         }catch (SQLException ex) {
             Logger.getLogger(ccasw_Search_customer.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -722,7 +730,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
 
     private void btnClaimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClaimActionPerformed
         // TODO add your handling code here:
-        btnClaim.setEnabled(false);
+        btnClaim.setEnabled(false);getcob();
         ccasw_claim_registration srclaim = new ccasw_claim_registration();
         srclaim.setVisible(true);
         srclaim.ClaimPolicy[0] = "1";
@@ -730,7 +738,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         srclaim.ClaimPolicy[2] = txtCob.getText();
         srclaim.ClaimPolicy[3] = lblPolicyNo.getText();
         srclaim.tabClaimPolicy.addRow(srclaim.ClaimPolicy);
-        srclaim.cobid1 = cobid; srclaim.couseOf();
+        srclaim.cobid1 = cobid; System.out.println("isi cobid1 "+cobid);srclaim.couseOf();
         srclaim.txtRcvd.setText(CCanj.lbluser.getText());
         if ((cobid.equals("301")) || (cobid.equals("302")) || (cobid.equals("303"))) {
           srclaim.cbType.setEnabled(true);
@@ -748,11 +756,15 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
         // TODO add your handling code here:
         if ((evt.getClickCount() == 2) && (tabcus1.getRowCount() != 0)){
             try {
-                sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP ,username='" + ContactCenterASWATA.lbluser.getText() + "'" + ",function_id=10" + ",ws_params='" + (String)this.tblcus1.getValueAt(this.tblcus1.getSelectedRow(), this.tblcus1.getTableHeader().getColumnModel().getColumnIndex("REG. NO.")) + ".'" + "";
-                ContactCenterASWATA.jconn.SQLExecute(sql1, ContactCenterASWATA.conn);
+                sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP "
+                        + ",username='" + CCanj.lbluser.getText() + "'"
+                        + ",function_id=10" 
+                        + ",ws_params='" + (String)this.tblcus1.getValueAt(this.tblcus1.getSelectedRow(), this.tblcus1.getTableHeader().getColumnModel().getColumnIndex("REG. NO.")) + ".'" 
+                        + "";
+                CCanj.jconn.SQLExecute(sql1, CCanj.conn);
                 
                 sqlid = "select distinct last_insert_id() from ws_request";
-                rs = ContactCenterASWATA.jconn.SQLExecuteRS(sqlid, ContactCenterASWATA.conn);
+                rs = CCanj.jconn.SQLExecuteRS(sqlid, CCanj.conn);
                 while (rs.next()) {
                     wsid1 = Integer.parseInt(rs.getString(1));
                     ws1 = true;
@@ -882,7 +894,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
             System.err.println(exc.getMessage());
         }
     }
-    public void request(){
+    public static void request(){
         if(ws=true&&wsid!=-1){
             Prg.value=0;
             wsws.start();

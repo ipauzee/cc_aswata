@@ -663,7 +663,7 @@ public class ccasw_CusProfileData extends javax.swing.JFrame {
             sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP "
                     + ",username='" + CCanj.lbluser.getText() + "'"
                     + ",function_id=3"
-                    + ",ws_params='"+lblDC1.getText()+"'."
+                    + ",ws_params='"+lblDC1.getText()+".'"
                     + "";
             CCanj.jconn.SQLExecute(sql1, CCanj.conn);
             sqlid = "select distinct last_insert_id() from log_mail";

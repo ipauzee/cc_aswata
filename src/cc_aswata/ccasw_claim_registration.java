@@ -11,12 +11,6 @@
 
 package cc_aswata;
 
-//import static cc_aswata.ccasw_View_Policy.CCanj;
-//import static cc_aswata.ccasw_View_Policy.detilcus;
-//import static cc_aswata.ccasw_View_Policy.html;
-//import static cc_aswata.ccasw_View_Policy.ws1;
-//import static cc_aswata.ccasw_View_Policy.wsid;
-//import static cc_aswata.ccasw_View_Policy.wsstt;
 import java.awt.event.*;
 import java.awt.Event.*;
 import java.sql.ResultSet;
@@ -334,7 +328,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         cbStatus.setFont(cbStatus.getFont().deriveFont((float)11));
         cbStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbStatus.setEnabled(false);
+        cbStatus.setFocusable(false);
         jPanel2.add(cbStatus);
         cbStatus.setBounds(590, 40, 340, 25);
 
@@ -770,13 +764,13 @@ String dateOfLoss,RegDate,RegTime;
         getTablePolicy(); getbranch(); getstatus(); getTypeOf(); getCouseOf(); getcob(); getTimeLost();
         ws1=false;
         Date dt6 =dtLoss.getDate();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         if(dt6!=null){                dateOfLoss = sdf.format(dt6);            }
         try{
             sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP "
-                    + ",username='" + CCanj.lbluser.getText() + "'"
-                    + ",function_id=13"
-                    + ",ws_params='\"comment\"-:-\""+txtComment.getText()+"\"-,-" +
+                    + ", username='" + CCanj.lbluser.getText() + "'"
+                    + ", function_id=13"
+                    + ", ws_params='(\"comment\"-:-\""+txtComment.getText()+"\"-,-" +
                         "\"cobId\"-:-\""+cobid1+"\"-,-" +
                         "\"tplType\"-:-\""+cbTpl.getSelectedItem()+"\"-,-" +
                         "\"remark\"-:-\""+txtRemark.getText()+"\"-,-" +
@@ -787,7 +781,7 @@ String dateOfLoss,RegDate,RegTime;
                         "\"lifeFlag\"-:-\""+lifeIns+"\"-,-" +
                         "\"pllFlag\"-:-\""+pll+"\"-,-" +
                         "\"craneFlag\"-:-\""+biayaDerek+"\"-,-" +
-                        "\"userName\"-:-\""+CCanj.lbluser.getText()+"\"-,-" +
+                        "\"userName\"-:-\"Bambang\"-,-" +
                         "\"typeOfLossId\"-:-\""+typofid+"\"-,-" +
                         "\"typeOfLossDesc\"-:-\""+cbType.getSelectedItem()+"\"-,-" +
                         "\"registrationType\"-:-\""+regType+"\"-,-" +
@@ -810,13 +804,13 @@ String dateOfLoss,RegDate,RegTime;
                         "\"timeOfLoss\"-:-\""+hoLost+":"+toLost+"\"-,-" +
                         "\"registeredTime\"-:-\""+RegTime+"\"-,-" +
                         "\"causeOfLossDesc\"-:-\""+cbCause.getSelectedItem()+"\"-,-" +
-                        "\"selectedTypeofLoss\"-:-\""+typofid+"'"
+                        "\"selectedTypeofLoss\"-:-\""+typofid+"\")'"
                     + "";
             CCanj.jconn.SQLExecute(sql1, CCanj.conn);
             sqlid = "select distinct last_insert_id() from ws_request";
-            rs = CCanj.jconn.SQLExecuteRS(sqlid, CCanj.conn);
-            while (rs.next()) {
-                wsid1 = Integer.parseInt(rs.getString(1));
+            rs1 = CCanj.jconn.SQLExecuteRS(sqlid, CCanj.conn);
+            while (rs1.next()) {
+                wsid1 = Integer.parseInt(rs1.getString(1));
                 ws = true;
             }
             System.out.println("\n wsid1 : "+wsid1);
@@ -829,13 +823,14 @@ String dateOfLoss,RegDate,RegTime;
 
     private void getTablePolicy(){
         claimInfoCol="";
-        if(tabClaimPolicy.getRowCount()!=0){
-            loop=0;
-            while(loop != tabClaimPolicy.getRowCount()){
-                loop++;
+        loop=0;
+        if(tabClaimPolicy.getRowCount()!=0){            
+            while(loop != tabClaimPolicy.getRowCount()){      
+                System.out.println("isi tabcus : " + tabClaimPolicy.getRowCount());
                 if(claimInfoCol.equals("")){
                     claimInfoCol=claimInfoCol+"-,-";
                 }
+                getcob();
                 claimInfoCol=claimInfoCol="{\"cobId\"-:-\""+cobid+"\"-,-" +
                             "	\"no\"-:-\""+(String)tblClaimPolicy.getValueAt(loop,tblClaimPolicy.getTableHeader().getColumnModel().getColumnIndex("No."))+"\"-,-" +
                             "	\"cob\"-:-\""+(String)tblClaimPolicy.getValueAt(loop,tblClaimPolicy.getTableHeader().getColumnModel().getColumnIndex("C.O.B"))+"\"-,-" +
@@ -846,7 +841,8 @@ String dateOfLoss,RegDate,RegTime;
                             "	\"coverNoteNumber\"-:-\"null\"-,-" +
                             "	\"openCoverNumber\"-:-\"null\"-,-" +
                             "	\"theInsured\"-:-\""+(String)tblClaimPolicy.getValueAt(loop,tblClaimPolicy.getTableHeader().getColumnModel().getColumnIndex("THE INSURED"))+"\"}" ;
-            }
+                loop++;System.out.println("isi loop : " + this.loop);
+            }            
 //            claimInfoCol="["+claimInfoCol+"]";
         }
     }
@@ -1018,9 +1014,9 @@ String dateOfLoss,RegDate,RegTime;
     private void webservice(){
         try{
             sql="select ws_status from ws_request where request_id="+wsid+" ";
-            rs1=CCanj.jconn.SQLExecuteRS(sql, CCanj.conn);
-            while(rs1.next()){
-                wsstt=Integer.parseInt(rs1.getString(1));
+            rs2=CCanj.jconn.SQLExecuteRS(sql, CCanj.conn);
+            while(rs2.next()){
+                wsstt=Integer.parseInt(rs2.getString(1));
             }
             System.out.println("\n status ws : "+wsstt+" dari ws id : "+wsid);
             process();
@@ -1100,7 +1096,7 @@ String dateOfLoss,RegDate,RegTime;
             while(rs.next()){
                 cbStatus.addItem(rs.getString(1));
             }
-            cbStatus.setSelectedIndex(-1);
+            cbStatus.setSelectedIndex(0);
         }catch(Exception e){
             System.out.println(e);
         }
@@ -1164,7 +1160,7 @@ String dateOfLoss,RegDate,RegTime;
     private void getTypeOf(){
         typofid="";
         try{
-            sql="select code from _ws_type_of_loss where name='"+cbType.getSelectedItem()+"'";
+            sql="select code from _ws_type_of_loss where data='"+cbType.getSelectedItem()+"'";
             rs=CCanj.jconn.SQLExecuteRS(sql,CCanj.conn);
             while(rs.next()){
                 typofid =(rs.getString(1).toString());

@@ -5057,6 +5057,7 @@ public class ContactCenterASWATA extends javax.swing.JInternalFrame {
             tic.setVisible(true);
 
             Tic.newtic=true;
+            Tic.claimReg=false;
             ticshow=true;
         }
         

@@ -1297,7 +1297,7 @@ public class ccasw_ticket extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(raction==true){
             showDetailCategory();
-            if(newtic==false){
+            if(newtic==true&&claimReg==false){
                 getdetiltic();
             }
         }
@@ -1797,6 +1797,10 @@ public class ccasw_ticket extends javax.swing.JFrame {
             if(ws1=true){
                 VIPO.ws=ws1;
                 VIPO.wsid=wsid1;
+                VIPO.Form=1;
+                VIPO.nopolis=txtNoPolis.getText();
+//                VIPO.client_id=client_id;
+                VIPO.cek();
                 VIPO.request();
             }
         }catch (SQLException ex) {

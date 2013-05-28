@@ -103,8 +103,8 @@ public class ccasw_Search_Claim extends javax.swing.JFrame {
                 cus[0]=rs.getString("no");
                 cus[1]=rs.getString("insured_name");
                 cus[2]=rs.getString("policy_no");
-                cus[3]=rs.getString("registrtation_no");
-                cus[4]=rs.getString("registrtation_date");
+                cus[3]=rs.getString("registration_no");
+                cus[4]=rs.getString("registration_date");
                 cus[5]=rs.getString("reported_by");
                 cus[6]=rs.getString("phone_no");
                 cus[7]=rs.getString("stt");
@@ -465,7 +465,7 @@ private static String Lstart=null,Lend=null,Rstart=null,Rend=null;
                     + ",username='" + CCanj.lbluser.getText() + "'"
                     + ",function_id=9"
                     + ",ws_params='" + branchid + "|" + cobid + "|" + txtNama.getText() + "|" + txtReportBy.getText() + "|" + txtSttClaim.getText() + ""
-                    + "|" + Rstart + "|" + Rend + "|" + Lstart + "|" + Lend + "|" + txtRegNo.getText() + "|" + txtPolicyNo.getText() + "'."
+                    + "|" + Rstart + "|" + Rend + "|" + Lstart + "|" + Lend + "|" + txtRegNo.getText() + "|" + txtPolicyNo.getText() + ".'"
                     + "";
             CCanj.jconn.SQLExecute(sql1, CCanj.conn);
             sqlid = "select distinct last_insert_id() from ws_request";

@@ -143,6 +143,7 @@
                     <Font component="txtBranchName" property="font" relativeSize="false" size="11"/>
                   </FontInfo>
                 </Property>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtBranchNameActionPerformed"/>
@@ -388,6 +389,7 @@
                     <Font component="txtInsured" property="font" relativeSize="false" size="11"/>
                   </FontInfo>
                 </Property>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
@@ -476,6 +478,7 @@
                     <Font component="txtReqNm" property="font" relativeSize="false" size="11"/>
                   </FontInfo>
                 </Property>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
@@ -493,6 +496,7 @@
                     <Font component="txtCob" property="font" relativeSize="false" size="11"/>
                   </FontInfo>
                 </Property>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
@@ -511,6 +515,7 @@
                   </FontInfo>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
@@ -529,6 +534,7 @@
                   </FontInfo>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>

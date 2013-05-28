@@ -304,7 +304,7 @@ public class ccasw_Search_customer extends javax.swing.JFrame {
                             sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP "
                                     + ",username='" + CCanj.lbluser.getText() + "'"
                                     + ",function_id=2"
-                                    + ",ws_params='"+(String)tblcus.getValueAt(tblcus.getSelectedRow(),tblcus.getTableHeader().getColumnModel().getColumnIndex("Client ID"))+"'."
+                                    + ",ws_params='"+(String)tblcus.getValueAt(tblcus.getSelectedRow(),tblcus.getTableHeader().getColumnModel().getColumnIndex("Client ID"))+".'"
                                     + "";
                             CCanj.jconn.SQLExecute(sql1, CCanj.conn);
                             sqlid = "select distinct last_insert_id() from ws_request";
@@ -344,7 +344,7 @@ public class ccasw_Search_customer extends javax.swing.JFrame {
             sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP "
                     + ",username='" + CCanj.lbluser.getText() + "'"
                     + ",function_id=1"
-                    + ",ws_params='" + branchid + "|" + txtNama.getText() + "|" + txtAddress.getText() + "|" + txtPhoneNo.getText() + "'."
+                    + ",ws_params='" + branchid + "|" + txtNama.getText() + "|" + txtAddress.getText() + "|" + txtPhoneNo.getText() + ".'"
                     + "";
             CCanj.jconn.SQLExecute(sql1, CCanj.conn);
             sqlid = "select distinct last_insert_id() from ws_request";
