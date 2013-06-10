@@ -149,19 +149,19 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
                 txtLossLocation.setText(rs1.getString("loss_location"));
                 txtRemark.setText(rs1.getString("remark"));
                 txtComment.setText(rs1.getString("comment"));
-                if ((rs1.getString("casco_flag") != null) && (rs1.getString("casco_flag").equals("1"))) ckCasco.setSelected(true);
-                if ((rs1.getString("tpl_flag") != null) && (rs1.getString("tpl_flag").equals("1"))) { ckTpl.setSelected(true); cbTpl.setEnabled(true); cbTpl.setSelectedItem(rs1.getString("tpl_type")); }
-                if ((rs1.getString("life_flag") != null) && (rs1.getString("life_flag").equals("1"))) ckLifeIns.setSelected(true);
-                if ((rs1.getString("pa_driver_flag") != null) && (rs1.getString("pa_driver_flag").equals("1"))) ckPaDriver.setSelected(true);
-                if ((rs1.getString("crane_flag") != null) && (rs1.getString("crane_flag").equals("1"))) ckBiayaDerek.setSelected(true);
+                if ((rs1.getString("casco_flag") != null) && (rs1.getString("casco_flag").equals("1"))) { ckCasco.setSelected(true);}
+                if ((rs1.getString("tpl_flag") != null) && (Integer.parseInt(rs1.getString("tpl_flag"))>=1)) { ckTpl.setSelected(true); cbTpl.setEnabled(true); cbTpl.setSelectedIndex(Integer.parseInt(rs1.getString("tpl_flag"))); }
+                if ((rs1.getString("life_flag") != null) && (rs1.getString("life_flag").equals("1"))) {ckLifeIns.setSelected(true);}
+                if ((rs1.getString("pa_driver_flag") != null) && (rs1.getString("pa_driver_flag").equals("1"))){ ckPaDriver.setSelected(true);}
+                if ((rs1.getString("crane_flag") != null) && (rs1.getString("crane_flag").equals("1"))){ ckBiayaDerek.setSelected(true);}
                 if ((rs1.getString("cob_id") != null) && ((rs1.getString("cob_id").equals("301")) || (rs1.getString("cob_id").equals("302")) || (rs1.getString("cob_id").equals("303")))) {
-                    ckCasco.setEnabled(true); ckTpl.setSelected(true);
+                    ckCasco.setEnabled(true); ckTpl.setEnabled(true);
                     ckLifeIns.setEnabled(true); ckPaDriver.setEnabled(true);
                     ckPaPassenger.setEnabled(true); ckBiayaDerek.setEnabled(true);
                 }
-                if ((rs1.getString("pa_passenger_flag") != null) || (rs1.getString("pa_passanger_flag").equals("1"))) ckPaPassenger.setSelected(true);
+                if ((rs1.getString("pa_passenger_flag") != null) && (rs1.getString("pa_passanger_flag").equals("1"))){ ckPaPassenger.setSelected(true);}
             }
-            sql = "delete from ws_detail_claim_registration where request_id=" + wsid + " ";
+//            sql = "delete from ws_detail_claim_registration where request_id=" + wsid + " ";
             CCanj.jconn.SQLExecute(sql, CCanj.conn);
         } catch (Exception exc) {
             System.err.println(exc.getMessage());
@@ -486,6 +486,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         ckBiayaDerek.setFont(ckBiayaDerek.getFont().deriveFont((float)11));
         ckBiayaDerek.setText("BIAYA DEREK");
+        ckBiayaDerek.setEnabled(false);
         ckBiayaDerek.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ckBiayaDerekActionPerformed(evt);
@@ -496,6 +497,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         ckCasco.setFont(ckCasco.getFont().deriveFont((float)11));
         ckCasco.setText("CASCO");
+        ckCasco.setEnabled(false);
         ckCasco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ckCascoActionPerformed(evt);
@@ -506,6 +508,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         ckTpl.setFont(ckTpl.getFont().deriveFont((float)11));
         ckTpl.setText("TPL");
+        ckTpl.setEnabled(false);
         ckTpl.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ckTplActionPerformed(evt);
@@ -516,6 +519,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         ckLifeIns.setFont(ckLifeIns.getFont().deriveFont((float)11));
         ckLifeIns.setText("LIFE INSURANCE");
+        ckLifeIns.setEnabled(false);
         ckLifeIns.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ckLifeInsActionPerformed(evt);
@@ -526,6 +530,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         ckPaDriver.setFont(ckPaDriver.getFont().deriveFont((float)11));
         ckPaDriver.setText("PA DRIVER");
+        ckPaDriver.setEnabled(false);
         ckPaDriver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ckPaDriverActionPerformed(evt);
@@ -536,6 +541,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         ckPaPassenger.setFont(ckPaPassenger.getFont().deriveFont((float)11));
         ckPaPassenger.setText("PA PASSANGER");
+        ckPaPassenger.setEnabled(false);
         ckPaPassenger.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ckPaPassengerActionPerformed(evt);
@@ -546,6 +552,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 
         ckPll.setFont(ckPll.getFont().deriveFont((float)11));
         ckPll.setText("PLL");
+        ckPll.setEnabled(false);
         ckPll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ckPllActionPerformed(evt);
@@ -720,8 +727,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSrchPolicyActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        // TODO add your handling code here:
-        PoDe.btnClaim.setEnabled(true);
+        // TODO add your handling code here:        
         if (ws2 == true){
             try {
                 sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP "
@@ -761,7 +767,7 @@ public class ccasw_claim_registration extends javax.swing.JFrame {
 String dateOfLoss,RegDate,RegTime;
     private void btnClaimSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClaimSaveActionPerformed
         // TODO add your handling code here:
-        getTablePolicy(); getbranch(); getstatus(); getTypeOf(); getCouseOf(); getcob(); getTimeLost();
+        getTablePolicy(); getbranch(); getstatus(); getTypeOf(); getCouseOf(); getcob(); getTimeLost();getCheckBox();
         ws1=false;
         Date dt6 =dtLoss.getDate();
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
@@ -774,7 +780,7 @@ String dateOfLoss,RegDate,RegTime;
                         "\"cobId\"-:-\""+cobid1+"\"-,-" +
                         "\"tplType\"-:-\""+cbTpl.getSelectedItem()+"\"-,-" +
                         "\"remark\"-:-\""+txtRemark.getText()+"\"-,-" +
-                        "\"tplFlag\"-:-\""+tpl+"\"-,-" +
+                        "\"tplFlag\"-:-\""+cbTpl.getSelectedIndex()+"\"-,-" +
                         "\"plaRefNo\"-:-\""+txtRefNo.getText()+"\"-,-" +
                         "\"phoneNo\"-:-\""+txtPhoneNo.getText()+"\"-,-" +
                         "\"cascoFlag\"-:-\""+casco+"\"-,-" +
@@ -1234,4 +1240,23 @@ String dateOfLoss,RegDate,RegTime;
         if (toLost.length() == 1)
             toLost = "0" + toLost;
     }     
+    private void getCheckBox(){
+//        if(ckTpl.isSelected()==true){            tpl=1;        }else{            tpl=0;        }
+
+        if(ckCasco.isSelected()==true){            casco=1;        }else{            casco=0;        }
+
+        if(ckLifeIns.isSelected()==true){            lifeIns=1;        }else{            lifeIns=0;        }
+
+        if(ckPaDriver.isSelected()==true){            paDri=1;        }else{            paDri=0;        }
+
+        if(ckPaPassenger.isSelected()==true){            paPass=1;        }else{            paPass=0;        }
+
+        if(ckPll.isSelected()==true){            pll=1;        }else{            pll=0;        }
+
+        if(ckBiayaDerek.isSelected()==true){            biayaDerek=1;        }else{            biayaDerek=0;        }
+    }
+    
+    private void setCheckBox(){
+        
+    }
 }

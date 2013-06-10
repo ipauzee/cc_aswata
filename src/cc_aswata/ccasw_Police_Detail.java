@@ -576,6 +576,7 @@ public class ccasw_Police_Detail extends javax.swing.JFrame {
 
         btnOpenTic.setFont(btnOpenTic.getFont().deriveFont(btnOpenTic.getFont().getStyle() | java.awt.Font.BOLD, 11));
         btnOpenTic.setText("Open Ticket");
+        btnOpenTic.setEnabled(false);
         btnOpenTic.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOpenTicActionPerformed(evt);

@@ -704,6 +704,7 @@
                       </FontInfo>
                     </Property>
                     <Property name="text" type="java.lang.String" value="BIAYA DEREK"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ckBiayaDerekActionPerformed"/>
@@ -725,6 +726,7 @@
                       </FontInfo>
                     </Property>
                     <Property name="text" type="java.lang.String" value="CASCO"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ckCascoActionPerformed"/>
@@ -746,6 +748,7 @@
                       </FontInfo>
                     </Property>
                     <Property name="text" type="java.lang.String" value="TPL"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ckTplActionPerformed"/>
@@ -767,6 +770,7 @@
                       </FontInfo>
                     </Property>
                     <Property name="text" type="java.lang.String" value="LIFE INSURANCE"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ckLifeInsActionPerformed"/>
@@ -788,6 +792,7 @@
                       </FontInfo>
                     </Property>
                     <Property name="text" type="java.lang.String" value="PA DRIVER"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ckPaDriverActionPerformed"/>
@@ -809,6 +814,7 @@
                       </FontInfo>
                     </Property>
                     <Property name="text" type="java.lang.String" value="PA PASSANGER"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ckPaPassengerActionPerformed"/>
@@ -830,6 +836,7 @@
                       </FontInfo>
                     </Property>
                     <Property name="text" type="java.lang.String" value="PLL"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ckPllActionPerformed"/>

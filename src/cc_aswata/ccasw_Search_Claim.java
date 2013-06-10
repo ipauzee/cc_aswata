@@ -412,7 +412,7 @@ private static String Lstart=null,Lend=null,Rstart=null,Rend=null;
                             sql1 = "insert into ws_request set request_time=CURRENT_TIMESTAMP "
                                     + ",username='" + CCanj.lbluser.getText() + "'"
                                     + ",function_id=10"
-                                    + ",ws_params='"+(String)tblcus.getValueAt(tblcus.getSelectedRow(),tblcus.getTableHeader().getColumnModel().getColumnIndex("Registration No"))+"'."
+                                    + ",ws_params='"+(String)tblcus.getValueAt(tblcus.getSelectedRow(),tblcus.getTableHeader().getColumnModel().getColumnIndex("Registration No"))+".'"
                                     + "";
                             CCanj.jconn.SQLExecute(sql1, CCanj.conn);
                             sqlid = "select distinct last_insert_id() from ws_request";
