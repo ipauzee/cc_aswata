@@ -213,7 +213,12 @@ public class ContactCenterASWATA extends javax.swing.JInternalFrame {
 
                 ,90,85,150,125,150
                 ,85});
-        tbin(tblrepcal,new int []{0,85,85,90,75,100,90,90,90,75,75,75,110,90,85,85,85,90,110,120,110,350,300,85,85,85,90,110,175,85,110,160,150});
+        tbin(tblrepcal, new int[] { 100, 100, 150, 100, 120        , 100, 100, 100, 100, 100
+                                        , 100, 100, 100, 120, 100       , 120, 100, 120, 100, 120
+                                        , 100, 80, 90, 120, 150, 200         , 150, 250, 500, 300, 120   , 110,160 });
+//        tbin(tblrepcal,new int []{0,85,85,90,75       ,100,90,90,90,75        
+//                                ,75,75,110,90,85      ,85,85,90,110,120       
+//                                ,110,350,300,85,85    ,85,90,110,175,85   ,110,160,150});
         tbin(tblticconf,new int []{100,115,100,350,200,100,300,120,250,100,170,120,120,120});
         tbin(tbltic,new int []{100,100,100,120,100      ,150,200,200,150,300,100
                                 ,150,250,120,500,100        ,100,100,120,100,500
@@ -5694,7 +5699,7 @@ String tic0;
 public static javax.swing.table.DefaultTableModel getDefaultTabelrepcal(){
     return new javax.swing.table.DefaultTableModel(
             new Object [][]{},
-            new String [] {"log_id","log_date","log_time","username","shift"
+            new String [] {"log_date","log_time","username","shift"
                     ,"host_addr","line_number","_direction","_callstatus","duration"
                     ,"abandon","wait","Speed of answer","ACW","Inquiry"
                     ,"Detail","Complaint","Detail","Request","Detail"
@@ -5771,6 +5776,7 @@ public static javax.swing.table.DefaultTableModel getDefaultTabelrepcal(){
                 repcal[x] = rs.getString("duration"); x += 1;
 
                 repcal[x] = rs.getString("abandon"); x += 1;
+                repcal[x] = rs.getString("wait"); x += 1;
                 repcal[x] = rs.getString("delay"); x += 1;
                 repcal[x] = rs.getString("busy"); x += 1;
                 repcal[x] = rs.getString("inq"); x += 1;
